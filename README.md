@@ -2,9 +2,24 @@
 
 An interactive conference presentation comparing classical machine learning, large language models, and tabular foundation models. Built with React, TypeScript, Vite, lightweight CSS, and Lucide icons. No backend or API keys.
 
+## Run in GitHub Codespaces (recommended)
+
+1. Open this project's GitHub repository.
+2. Select **Code → Codespaces → Create codespace on main**.
+3. Wait for the container setup to finish. Dependencies install automatically and the Vite server starts on port **5173**.
+4. Open **Paradigm Lab — interactive preview** from the **Ports** panel if the browser does not open automatically.
+
+Your preview URL is `https://CODESPACE-NAME-5173.app.github.dev`. Keep port visibility **Private** for your own presentation. The server restarts automatically when the Codespace starts again. If it fails to start, run `npm run dev` in the terminal; automatic startup logs are in `/tmp/paradigm-lab-vite.log`.
+
+If you already have a Codespace created from an older version of this project, pull the latest changes and run **Codespaces: Rebuild Container** from the command palette.
+
+The Vite configuration permits only the current Codespace's forwarded hostname and uses a fixed port, so Codespaces' port forwarding stays aligned with the server.
+
+[GitHub port forwarding documentation](https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace)
+
 ## Run locally
 
-Requires Node.js 22+ and npm.
+Requires Node.js 22.6+ and npm.
 
 ```sh
 npm ci
@@ -18,13 +33,11 @@ npm run build
 npm run preview
 ```
 
-## GitHub Codespaces
-
-Push this project to a GitHub repository, then select **Code → Codespaces → Create codespace**. The included devcontainer installs dependencies and forwards port 5173. Run `npm run dev` in the Codespaces terminal and open the forwarded port.
+Run model behavior checks with `npm test`.
 
 ## Presentation
 
-Use the navigation to explore each experiment. **Auto Demo** walks through classical training, LLM token processing, tabular pretraining and inference, and comparison. Selecting any navigation item stops the demo. **Next Step** highlights the comparison pipelines. Use browser fullscreen for projection; the layout also adapts to tablets and phones. Reduced-motion preferences are respected.
+Use the navigation to explore each experiment. **Auto Demo** walks through classical training, LLM token processing, tabular pretraining and inference, and comparison. Selecting any navigation item stops the demo. **Next Step** highlights the comparison pipelines. The dark presentation theme uses blue for classical ML, amber for LLMs, and teal for tabular foundation models. Use browser fullscreen for projection; the layout also adapts to tablets and phones. Reduced-motion preferences are respected.
 
 - Classical ML: edit labeled training values and targets, choose an algorithm, train, then adjust the separate inference row and predict. Training edits invalidate the trained model.
 - LLM: enter a sentence, explore the sequence, choose a candidate, and repeatedly generate tokens.
