@@ -1,10 +1,12 @@
 # Paradigm Lab
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/itsmarlo/paradigm-tab-lab?quickstart=1)
+
 An interactive conference presentation comparing classical machine learning, large language models, and tabular foundation models. Built with React, TypeScript, Vite, lightweight CSS, and Lucide icons. No backend or API keys.
 
 ## Run in GitHub Codespaces (recommended)
 
-1. Open this project's GitHub repository.
+1. Open [itsmarlo/paradigm-tab-lab](https://github.com/itsmarlo/paradigm-tab-lab), or use the **Open in GitHub Codespaces** button above.
 2. Select **Code → Codespaces → Create codespace on main**.
 3. Wait for the container setup to finish. Dependencies install automatically and the Vite server starts on port **5173**.
 4. Open **Paradigm Lab — interactive preview** from the **Ports** panel if the browser does not open automatically.
