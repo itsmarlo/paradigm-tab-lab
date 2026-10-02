@@ -53,6 +53,37 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 - LLM: enter a sentence, explore the sequence, choose a candidate, and repeatedly generate tokens.
 - Tabular FM: switch between pretraining and inference. Edit context values and labels, add/remove rows, adjust the query, and predict without a training step.
 
+## Synthetic XGBoost and SAP-RPT-1.6 experiment
+
+`data/synthetic_invoices/payment_behavior.csv` is the **single labeled input dataset** for both models. It contains 1,152 synthetic invoices in a fixed order. Rows 1–1,024 are the shared training/context set; rows 1,025–1,152 are the shared 128-row test set. The two targets are `paid_late` and `is_fraud` (1 means yes, 0 means no). Each row represents one invoice; all ten predictors are known when the invoice is issued. The generated outcomes contain random noise, so neither model should be expected to predict perfectly. The fraud label is a synthetic scenario for comparing models, not a real fraud determination.
+
+| File | Use |
+| --- | --- |
+| `payment_behavior.csv` | The one labeled source dataset for both targets |
+| `rpt16_prompt.csv` | The same rows in the same order, with both targets in the final 128 rows replaced by `[PREDICT]`; upload to the SAP-RPT Playground |
+| `rpt16_request.json` | The same RPT input as a JSON payload for an AI Core deployment |
+| `xgboost_results.csv` | XGBoost output on the final 128 rows: actual labels, predictions, and probabilities for both targets. Created by the runner, not a second input dataset |
+
+Regenerate the files with `python3 scripts/generate_synthetic_invoices.py`. The seed and row counts are fixed. `invoice_id` is only a row identifier: exclude it from XGBoost features. The RPT request uses it as `index_column`. Compare both models' predictions with the last 128 labeled rows of `payment_behavior.csv` by `invoice_id`. The test labels must remain hidden from each model during prediction; the RPT files already mask them.
+
+To run the XGBoost baseline in a Python environment:
+
+```sh
+python3 -m pip install pandas scikit-learn xgboost
+python3 scripts/run_xgboost_invoices.py
+```
+
+The script prints accuracy, ROC AUC, precision, and recall for each target and writes `xgboost_results.csv` in the data directory. This is a **results file**, not a separate dataset. To run RPT-1.6 on the same rows, use an authorized SAP AI Core deployment:
+
+```sh
+export SAP_RPT_DEPLOYMENT_URL="https://YOUR-DEPLOYMENT-URL"
+export SAP_RPT_AUTH_TOKEN="YOUR-TEMPORARY-TOKEN"
+export SAP_RPT_RESOURCE_GROUP="default"
+python3 scripts/run_rpt16_invoices.py
+```
+
+Set those variables locally; do not commit credentials. The script sends `rpt16_request.json`, writes the raw `rpt16_response.json` and a scored `rpt16_results.csv`, and checks that SAP returned exactly the shared 128 test invoice IDs. If you used the [SAP-RPT Playground](https://rpt.cloud.sap/) instead, run `python3 scripts/run_rpt16_invoices.py --response path/to/exported_response.json` to score its JSON response. The request has 1,024 context rows and 128 prediction rows with two prediction columns, within SAP's documented limits for the standard model. RPT calls require your own access. The browser presentation still uses its separate educational scoring functions, so its displayed predictions are not benchmark results.
+
 ## Educational scope
 
 The site teaches data flow, not actual model benchmarking. Classical algorithms share a simplified centroid-based scoring function with different scales. LLM tokens, embeddings, attention, and probabilities are illustrative. Tabular predictions use normalized, similarity-weighted context labels, not actual pretrained transformer weights. Real tabular foundation model capabilities and preprocessing requirements vary; this visualization focuses on in-context inference models. Income is in generic units of thousands. All examples are generic.
