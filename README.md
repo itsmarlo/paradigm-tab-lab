@@ -63,6 +63,7 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 | `exports/rpt_upload.csv` | Upload format derived from the same rows, with both targets in the final 128 rows replaced by `[PREDICT]`; upload to the SAP-RPT Playground |
 | `rpt16_request.json` | The same RPT input as a JSON payload for an AI Core deployment |
 | `xgboost_results.csv` | XGBoost output on the final 128 rows: actual labels, predictions, and probabilities for both targets. Created by the runner, not a second input dataset |
+| `exports/rpt_playground_export.csv` | Copy of the supplied SAP-RPT Playground table export; its final 128 target values are treated as RPT class predictions in the notebook |
 
 Regenerate the files with `python3 scripts/generate_synthetic_invoices.py`. The seed and row counts are fixed. `invoice_id` is only a row identifier: exclude it from XGBoost features. The RPT request uses it as `index_column`. Compare both models' predictions with the last 128 labeled rows of `payment_behavior.csv` by `invoice_id`. The test labels must remain hidden from each model during prediction; the RPT files already mask them.
 
@@ -103,7 +104,7 @@ curl -X POST http://127.0.0.1:8000/api/predictions/xgboost \
   -d '{"invoice_amount_eur":2400,"payment_terms_days":30,"customer_tenure_months":24,"prior_late_payment_rate":0.2,"open_invoice_count":2,"customer_segment":"midmarket","region":"DACH","billing_address_mismatch":0,"bank_account_changed_recently":0,"weekend_submission":0}'
 ```
 
-Open [the experiment notebook](notebooks/payment_behavior_experiment.ipynb) in Jupyter from the repository root. For a presentation screenshot, use the clearly labeled **“Screenshot this cell: XGBoost prediction results”** section (code cell `In [5]`); the same figure is saved as [xgboost_prediction_results.png](notebooks/xgboost_prediction_results.png). The next code cell, **`In [6]`**, runs the fraud classifier directly and lists all invoices it flagged. The notebook also contains dataset checks and figures. Its RPT comparison section remains pending until a real `rpt16_results.csv` is produced, then fills in when you rerun the notebook. The notebook and API use the same dataset and split as the command-line scripts.
+Open [the experiment notebook](notebooks/payment_behavior_experiment.ipynb) in Jupyter from the repository root. For a presentation screenshot, use the clearly labeled **“Screenshot this cell: XGBoost prediction results”** section; the same figure is saved as [xgboost_prediction_results.png](notebooks/xgboost_prediction_results.png). The next section runs the fraud classifier directly and lists all invoices it flagged. The notebook validates the supplied Playground table export against the shared dataset and plots [the XGBoost/RPT comparison](notebooks/model_comparison.png) on the same 128 test invoices. The export contains class labels but no model metadata or probabilities, so its RPT provenance is based on the supplied file and RPT ROC AUC cannot be calculated. The local API still expects `rpt16_results.csv` from a deployment response. The notebook and API use the same dataset and split as the command-line scripts.
 
 ## Educational scope
 
