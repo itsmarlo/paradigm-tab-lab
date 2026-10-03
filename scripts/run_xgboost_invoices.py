@@ -12,18 +12,24 @@ from generate_synthetic_invoices import CONTEXT_ROWS, PREDICTION_ROWS, TARGETS
 DATA = Path(__file__).resolve().parents[1] / "data" / "synthetic_invoices"
 
 
-def main():
+def load_split():
     invoices = pd.read_csv(DATA / "payment_behavior.csv")
     if len(invoices) != CONTEXT_ROWS + PREDICTION_ROWS:
         raise ValueError("The invoice dataset has an unexpected number of rows")
     train = invoices.iloc[:CONTEXT_ROWS]
     test = invoices.iloc[CONTEXT_ROWS:]
+    return train, test
+
+
+def encode_features(frame, columns=None):
     excluded = ["invoice_id", *TARGETS]
-    x_train = pd.get_dummies(train.drop(columns=excluded), dtype=int)
-    x_test = pd.get_dummies(test.drop(columns=excluded), dtype=int).reindex(
-        columns=x_train.columns, fill_value=0
-    )
-    results = test.drop(columns=list(TARGETS)).copy()
+    encoded = pd.get_dummies(frame.drop(columns=excluded, errors="ignore"), dtype=int)
+    return encoded if columns is None else encoded.reindex(columns=columns, fill_value=0)
+
+
+def train_models(train):
+    x_train = encode_features(train)
+    models = {}
     for target in TARGETS:
         positives = int(train[target].sum())
         negatives = len(train) - positives
@@ -40,11 +46,30 @@ def main():
             scale_pos_weight=negatives / positives if target == "is_fraud" else 1,
         )
         model.fit(x_train, train[target])
-        probabilities = model.predict_proba(x_test)[:, 1]
+        models[target] = model
+    return models, x_train.columns
+
+
+def predict_frame(models, columns, frame):
+    x_test = encode_features(frame, columns)
+    results = frame.drop(columns=list(TARGETS), errors="ignore").copy()
+    for target in TARGETS:
+        probabilities = models[target].predict_proba(x_test)[:, 1]
         predictions = (probabilities >= 0.5).astype(int)
-        results[f"actual_{target}"] = test[target]
+        if target in frame:
+            results[f"actual_{target}"] = frame[target].to_numpy()
         results[f"predicted_{target}"] = predictions
         results[f"probability_{target}"] = probabilities
+    return results
+
+
+def main():
+    train, test = load_split()
+    models, columns = train_models(train)
+    results = predict_frame(models, columns, test)
+    for target in TARGETS:
+        predictions = results[f"predicted_{target}"]
+        probabilities = results[f"probability_{target}"]
         print(
             f"{target}: accuracy={accuracy_score(test[target], predictions):.3f}, "
             f"ROC AUC={roc_auc_score(test[target], probabilities):.3f}, "

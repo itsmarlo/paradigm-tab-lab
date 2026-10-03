@@ -43,11 +43,7 @@ def load_response(path):
     return result
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--response", type=Path, help="Use an exported RPT JSON response")
-    args = parser.parse_args()
-    response = load_response(args.response)
+def score_response(response):
     predictions = response.get("predictions")
     if not isinstance(predictions, list):
         raise ValueError("RPT response has no predictions array")
@@ -88,6 +84,14 @@ def main():
             f"recall={recall_score(actual, predicted, zero_division=0):.3f}"
         )
     print(f"Predictions: {path}")
+    return path
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--response", type=Path, help="Use an exported RPT JSON response")
+    args = parser.parse_args()
+    score_response(load_response(args.response))
 
 
 if __name__ == "__main__":

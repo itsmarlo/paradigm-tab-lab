@@ -60,7 +60,7 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 | File | Use |
 | --- | --- |
 | `payment_behavior.csv` | The one labeled source dataset for both targets |
-| `rpt16_prompt.csv` | The same rows in the same order, with both targets in the final 128 rows replaced by `[PREDICT]`; upload to the SAP-RPT Playground |
+| `exports/rpt_upload.csv` | Upload format derived from the same rows, with both targets in the final 128 rows replaced by `[PREDICT]`; upload to the SAP-RPT Playground |
 | `rpt16_request.json` | The same RPT input as a JSON payload for an AI Core deployment |
 | `xgboost_results.csv` | XGBoost output on the final 128 rows: actual labels, predictions, and probabilities for both targets. Created by the runner, not a second input dataset |
 
@@ -83,6 +83,27 @@ python3 scripts/run_rpt16_invoices.py
 ```
 
 Set those variables locally; do not commit credentials. The script sends `rpt16_request.json`, writes the raw `rpt16_response.json` and a scored `rpt16_results.csv`, and checks that SAP returned exactly the shared 128 test invoice IDs. If you used the [SAP-RPT Playground](https://rpt.cloud.sap/) instead, run `python3 scripts/run_rpt16_invoices.py --response path/to/exported_response.json` to score its JSON response. The request has 1,024 context rows and 128 prediction rows with two prediction columns, within SAP's documented limits for the standard model. RPT calls require your own access. The browser presentation still uses its separate educational scoring functions, so its displayed predictions are not benchmark results.
+
+### Local API and Jupyter notebook
+
+From the repository root, install the experiment dependencies and start the API:
+
+```sh
+python3 -m pip install -r requirements-experiment.txt
+python3 -m uvicorn api:app --host 127.0.0.1 --port 8000
+```
+
+Open **http://127.0.0.1:8000/docs** for interactive API testing. `GET /api/experiment` returns the fixed 128-row test metrics and a few XGBoost examples. `POST /api/predictions/xgboost` accepts one new invoice and predicts both targets. `POST /api/experiment/rpt` sends the same fixed test split to your configured SAP-RPT-1.6 deployment, saves its results, and can incur SAP inference charges each time it is called. Without a deployment URL and token, it returns HTTP 503 with `RPT_NOT_CONFIGURED`. The API is local only; it is not deployed or connected to the presentation website.
+
+An example request for a new invoice:
+
+```sh
+curl -X POST http://127.0.0.1:8000/api/predictions/xgboost \
+  -H 'Content-Type: application/json' \
+  -d '{"invoice_amount_eur":2400,"payment_terms_days":30,"customer_tenure_months":24,"prior_late_payment_rate":0.2,"open_invoice_count":2,"customer_segment":"midmarket","region":"DACH","billing_address_mismatch":0,"bank_account_changed_recently":0,"weekend_submission":0}'
+```
+
+Open [the experiment notebook](notebooks/payment_behavior_experiment.ipynb) in Jupyter from the repository root. For a presentation screenshot, use the clearly labeled **“Screenshot this cell: XGBoost prediction results”** section (code cell `In [5]`); the same figure is saved as [xgboost_prediction_results.png](notebooks/xgboost_prediction_results.png). The next code cell, **`In [6]`**, runs the fraud classifier directly and lists all invoices it flagged. The notebook also contains dataset checks and figures. Its RPT comparison section remains pending until a real `rpt16_results.csv` is produced, then fills in when you rerun the notebook. The notebook and API use the same dataset and split as the command-line scripts.
 
 ## Educational scope
 

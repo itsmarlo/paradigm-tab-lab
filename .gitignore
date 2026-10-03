@@ -3,3 +3,6 @@ dist/
 .env*
 
 *.tsbuildinfo
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

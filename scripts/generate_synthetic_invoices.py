@@ -91,6 +91,7 @@ def write_csv(path, rows):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "exports").mkdir(exist_ok=True)
     rows = make_rows()
     context = rows[:CONTEXT_ROWS]
     holdout = rows[CONTEXT_ROWS:]
@@ -102,7 +103,7 @@ def main():
         assert {row[target] for row in context} == {0, 1}
         assert {row[target] for row in holdout} == {0, 1}
     write_csv(OUT / "payment_behavior.csv", rows)
-    write_csv(OUT / "rpt16_prompt.csv", prompt_rows)
+    write_csv(OUT / "exports" / "rpt_upload.csv", prompt_rows)
     payload = {
         "prediction_config": {"target_columns": [
             {"name": target, "prediction_placeholder": "[PREDICT]", "task_type": "classification"}
