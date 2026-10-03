@@ -1,7 +1,6 @@
 """Local HTTP API for the shared invoice prediction experiment."""
 
 import asyncio
-import os
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -16,7 +15,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_a
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from generate_synthetic_invoices import CONTEXT_ROWS, PREDICTION_ROWS, TARGETS  # noqa: E402
-from run_rpt16_invoices import load_response, score_response  # noqa: E402
+from run_rpt16_invoices import has_rpt_configuration, run_experiment  # noqa: E402
 from run_xgboost_invoices import DATA, load_split, predict_frame, train_models  # noqa: E402
 
 
@@ -103,7 +102,7 @@ def model_metrics(frame, include_auc):
 def health():
     return {
         "status": "ok",
-        "rptConfigured": bool(os.getenv("SAP_RPT_DEPLOYMENT_URL") and os.getenv("SAP_RPT_AUTH_TOKEN")),
+        "rptConfigured": has_rpt_configuration(),
     }
 
 
@@ -154,13 +153,13 @@ def predict_xgboost(invoice: InvoiceFeatures):
 @app.post("/api/experiment/rpt", status_code=200)
 async def run_rpt_experiment():
     """Run SAP-RPT on the fixed test split; each call makes a paid SAP inference request."""
-    if not os.getenv("SAP_RPT_DEPLOYMENT_URL") or not os.getenv("SAP_RPT_AUTH_TOKEN"):
+    if not has_rpt_configuration():
         raise HTTPException(
             status_code=503,
-            detail={"code": "RPT_NOT_CONFIGURED", "message": "Set SAP_RPT_DEPLOYMENT_URL and SAP_RPT_AUTH_TOKEN."},
+            detail={"code": "RPT_NOT_CONFIGURED", "message": "Configure direct RPT credentials or SAP AI Core service-key settings."},
         )
     try:
-        await asyncio.to_thread(lambda: score_response(load_response(None)))
+        await asyncio.to_thread(run_experiment)
     except (ValueError, KeyError, TypeError) as error:
         raise HTTPException(
             status_code=502,

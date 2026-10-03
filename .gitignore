@@ -6,3 +6,8 @@ dist/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Local SAP deployment outputs
+data/synthetic_invoices/rpt16_response.json
+data/synthetic_invoices/rpt16_results.csv
+data/synthetic_invoices/rpt16_run_metadata.json

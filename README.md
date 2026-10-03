@@ -83,7 +83,9 @@ export SAP_RPT_RESOURCE_GROUP="default"
 python3 scripts/run_rpt16_invoices.py
 ```
 
-Set those variables locally; do not commit credentials. The script sends `rpt16_request.json`, writes the raw `rpt16_response.json` and a scored `rpt16_results.csv`, and checks that SAP returned exactly the shared 128 test invoice IDs. If you used the [SAP-RPT Playground](https://rpt.cloud.sap/) instead, run `python3 scripts/run_rpt16_invoices.py --response path/to/exported_response.json` to score its JSON response. The request has 1,024 context rows and 128 prediction rows with two prediction columns, within SAP's documented limits for the standard model. RPT calls require your own access. The browser presentation still uses its separate educational scoring functions, so its displayed predictions are not benchmark results.
+Set those variables locally; do not commit credentials. The script sends `rpt16_request.json`, writes the raw `rpt16_response.json`, a scored `rpt16_results.csv`, and `rpt16_run_metadata.json`, and checks that SAP returned exactly the shared 128 test invoice IDs. The metadata records the request and result checksums plus a hash of the deployment URL; it does not store the token. If you used the [SAP-RPT Playground](https://rpt.cloud.sap/) instead, run `python3 scripts/run_rpt16_invoices.py --response path/to/exported_response.json` to score its JSON response; the metadata then marks it as an exported response rather than a direct BTP run. The request has 1,024 context rows and 128 prediction rows with two prediction columns, within SAP's documented limits for the standard model. RPT calls require your own access. The browser presentation still uses its separate educational scoring functions, so its displayed predictions are not benchmark results.
+
+The runner can also load a repository-root `.env` file with SAP AI Core service-key settings: `SAP_AI_CORE_API_URL`, `SAP_AI_CORE_AUTH_URL`, `SAP_AI_CORE_CLIENT_ID`, `SAP_AI_CORE_CLIENT_SECRET`, and `SAP_RPT_DEPLOYMENT_ID`. It obtains an OAuth token, fetches the deployment URL, and then makes the prediction request. `SAP_AI_CORE_RESOURCE_GROUP` and `SAP_RPT_MODEL_NAME` are optional. The configured model name is recorded as a label, so verify that it matches the actual deployment before presenting a model-version comparison. `RPT_DRY_RUN=true` prevents a live inference call.
 
 ### Local API and Jupyter notebook
 
@@ -105,6 +107,14 @@ curl -X POST http://127.0.0.1:8000/api/predictions/xgboost \
 ```
 
 Open [the experiment notebook](notebooks/payment_behavior_experiment.ipynb) in Jupyter from the repository root. For a presentation screenshot, use the clearly labeled **“Screenshot this cell: XGBoost prediction results”** section; the same figure is saved as [xgboost_prediction_results.png](notebooks/xgboost_prediction_results.png). The next section runs the fraud classifier directly and lists all invoices it flagged. The notebook validates the supplied Playground table export against the shared dataset and plots [the XGBoost/RPT comparison](notebooks/model_comparison.png) on the same 128 test invoices. The export contains class labels but no model metadata or probabilities, so its RPT provenance is based on the supplied file and RPT ROC AUC cannot be calculated. The local API still expects `rpt16_results.csv` from a deployment response. The notebook and API use the same dataset and split as the command-line scripts.
+
+For separate, reproducible runs, open these notebooks in order:
+
+1. [XGBoost run](notebooks/xgboost_run.ipynb) trains on the fixed split and saves `xgboost_results.csv`.
+2. [RPT BTP run](notebooks/rpt_btp_run.ipynb) validates the masked request and loads `.env` automatically. Change `RUN_LIVE_RPT` to `True` in its run cell to call your deployment and save its response, results, and metadata. The live call may incur charges.
+3. [Compare saved results](notebooks/compare_saved_results.ipynb) checks matching invoice IDs and labels, calculates metrics, and saves [the comparison chart](notebooks/saved_results_comparison.png). It uses a validated direct BTP run when present; otherwise it explicitly labels the supplied Playground export. It never calls BTP.
+
+The older combined notebook remains a presentation walkthrough. The three notebooks above keep model execution separate from comparison, so rerunning a chart does not trigger another BTP request.
 
 ## Educational scope
 
