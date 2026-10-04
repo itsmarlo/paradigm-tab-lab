@@ -11,6 +11,6 @@ __pycache__/
 .ipynb_checkpoints/
 notebooks/_local_archive/
 
-# Raw SAP responses can contain deployment details. Publish scored results and
-# the reduced provenance metadata instead.
-**/rpt16_response.json
+# Local SAP responses and threshold requests may contain deployment details.
+# Publish scored results and reduced provenance metadata instead.
+**/.local/

@@ -55,7 +55,7 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 
 ## Synthetic XGBoost and SAP RPT 1.6 experiment
 
-The [main invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthetic invoices**. The first 1,024 rows are XGBoost training data and RPT context; the last 128 are the shared test set. The two targets are `paid_late` and `is_fraud`. There are **187 fraud labels in context and 22 in test**. These are generated labels, not real payment or fraud determinations.
+The [active invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthetic invoices**. The first 1,024 rows are XGBoost training data and RPT context; the last 128 are the shared test set. The two targets are `paid_late` and `is_fraud`. There are **187 fraud labels in context and 22 in test**. These are generated labels, not real payment or fraud determinations.
 
 | File | Purpose |
 | --- | --- |
@@ -66,7 +66,7 @@ The [main invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthe
 | [rpt16_results.csv](data/synthetic_invoices/rpt16_results.csv) | Saved direct BTP test predictions and selected-class confidence |
 | [rpt16_run_metadata.json](data/synthetic_invoices/rpt16_run_metadata.json) | Public model label and request/result checksums |
 
-The saved results are included so the comparison works without SAP credentials. The raw BTP response and local `.env` are ignored. The [rare-fraud baseline and context-only sensitivity check](archive/synthetic_invoice_experiments/README.md) are archived outside the main data folder; their test labels must not be mixed with the main results.
+The saved results are included so the comparison works without SAP credentials. Raw BTP responses are kept outside the repository, and local `.env` is ignored. Earlier [sensitivity studies](archive/synthetic_invoice_experiments/README.md) remain outside `data/`; their results must not be mixed with this 22-case test.
 
 ### Run the experiment notebooks
 
@@ -94,7 +94,7 @@ RPT leads on late-payment metrics in this run. XGBoost finds more synthetic frau
 
 ![XGBoost and SAP RPT 1.6 results on the shared synthetic test set](notebooks/saved_results_comparison.png)
 
-For a Playground demo, upload the current [masked CSV](data/synthetic_invoices/exports/rpt_upload.csv) and show its prediction explanation, uncertainty, and relevant context rows. The archived Playground export belongs to the earlier eight-fraud-case dataset; it is **not** part of the main benchmark. Use the direct BTP results above for the quantitative slide.
+For a Playground demo, upload the [masked CSV](data/synthetic_invoices/exports/rpt_upload.csv) and show its prediction explanation, uncertainty, and relevant context rows. The archived Playground export belongs to the earlier eight-case dataset and must not be mixed with this benchmark. Use the direct BTP results above for the quantitative slide.
 
 ### Optional local API
 

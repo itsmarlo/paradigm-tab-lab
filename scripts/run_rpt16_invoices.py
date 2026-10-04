@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import re
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -122,8 +123,8 @@ def load_response(path, connection=None, data=DATA):
     )
     with urlopen(request, timeout=300) as response:
         result = json.load(response)
-    raw_dir = data / ".local"
-    raw_dir.mkdir(exist_ok=True)
+    raw_dir = Path(tempfile.gettempdir()) / "tfm-rpt-responses" / data.name
+    raw_dir.mkdir(parents=True, exist_ok=True)
     (raw_dir / "rpt16_response.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )

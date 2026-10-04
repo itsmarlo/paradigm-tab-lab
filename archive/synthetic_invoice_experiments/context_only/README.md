@@ -1,8 +1,8 @@
 # Fraud context experiment
 
-This secondary sensitivity check changes only the synthetic fraud labels in the first 1,024 context rows. The fraud label generator uses an intercept of `-2.8` instead of `-4.2`, producing 187 fraud labels instead of 53. All invoice predictors, all late-payment labels, and the final 128 test rows and labels match the archived rare-fraud baseline. The RPT request masks both targets for those test rows. The published main dataset uses the `-2.8` generator for both context and test labels.
+This secondary sensitivity check changes only the synthetic fraud labels in the first 1,024 context rows. The fraud label generator uses an intercept of `-2.8` instead of `-4.2`, producing 187 fraud labels instead of 53. All invoice predictors, all late-payment labels, and the final 128 test rows and labels match the archived eight-case baseline. The RPT request masks both targets for those test rows. The active 22-case dataset uses the `-2.8` generator for both context and test labels.
 
-Both models were rerun on this scenario. `xgboost_results.csv` is the local XGBoost result. `rpt16_results.csv` is the direct SAP BTP result from the configured `sap-rpt-1.6-large` deployment; `rpt16_run_metadata.json` records its source and checksums. The original rare-fraud files are in `../rare_fraud_baseline/`.
+Both models were rerun on this scenario. `xgboost_results.csv` is the local XGBoost result. `rpt16_results.csv` is the direct SAP BTP result from the configured `sap-rpt-1.6-large` deployment; `rpt16_run_metadata.json` records its source and checksums. The original eight-case files are in the [rare-fraud baseline](../rare_fraud_baseline/README.md).
 The [before-and-after chart](fraud_context_enrichment_for_ppt.png) is a secondary sensitivity figure, not the main TechEd comparison slide.
 
 | Model | Fraud found of 8 | False alarms of 120 | Precision | Recall |
