@@ -2,7 +2,7 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/itsmarlo/paradigm-tab-lab?quickstart=1)
 
-An interactive conference presentation comparing classical machine learning, large language models, and tabular foundation models. Built with React, TypeScript, Vite, lightweight CSS, and Lucide icons. No backend or API keys.
+An interactive TechEd presentation comparing classical machine learning, large language models, and tabular foundation models. The website uses React, TypeScript, and Vite without a backend or API keys. A separate local Python experiment compares XGBoost with SAP RPT 1.6 on synthetic invoices.
 
 ## Use the published app
 
@@ -53,68 +53,52 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 - LLM: enter a sentence, explore the sequence, choose a candidate, and repeatedly generate tokens.
 - Tabular FM: switch between pretraining and inference. Edit context values and labels, add/remove rows, adjust the query, and predict without a training step.
 
-## Synthetic XGBoost and SAP-RPT-1.6 experiment
+## Synthetic XGBoost and SAP RPT 1.6 experiment
 
-`data/synthetic_invoices/payment_behavior.csv` is the **single labeled input dataset** for both models. It contains 1,152 synthetic invoices in a fixed order. Rows 1–1,024 are the shared training/context set; rows 1,025–1,152 are the shared 128-row test set. The two targets are `paid_late` and `is_fraud` (1 means yes, 0 means no). Each row represents one invoice; all ten predictors are known when the invoice is issued. The generated outcomes contain random noise, so neither model should be expected to predict perfectly. The fraud label is a synthetic scenario for comparing models, not a real fraud determination.
+The [main invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthetic invoices**. The first 1,024 rows are XGBoost training data and RPT context; the last 128 are the shared test set. The two targets are `paid_late` and `is_fraud`. There are **187 fraud labels in context and 22 in test**. These are generated labels, not real payment or fraud determinations.
 
-| File | Use |
+| File | Purpose |
 | --- | --- |
-| `payment_behavior.csv` | The one labeled source dataset for both targets |
-| `exports/rpt_upload.csv` | Upload format derived from the same rows, with both targets in the final 128 rows replaced by `[PREDICT]`; upload to the SAP-RPT Playground |
-| `rpt16_request.json` | The same RPT input as a JSON payload for an AI Core deployment |
-| `xgboost_results.csv` | XGBoost output on the final 128 rows: actual labels, predictions, and probabilities for both targets. Created by the runner, not a second input dataset |
-| `exports/rpt_playground_export.csv` | Copy of the supplied SAP-RPT Playground table export; its final 128 target values are treated as RPT class predictions in the notebook |
+| [payment_behavior.csv](data/synthetic_invoices/payment_behavior.csv) | Single labeled source for both models |
+| [exports/rpt_upload.csv](data/synthetic_invoices/exports/rpt_upload.csv) | Same rows for Playground, with both test targets masked as `[PREDICT]` |
+| [rpt16_request.json](data/synthetic_invoices/rpt16_request.json) | Equivalent masked BTP request |
+| [xgboost_results.csv](data/synthetic_invoices/xgboost_results.csv) | Saved XGBoost test predictions and class-1 probabilities |
+| [rpt16_results.csv](data/synthetic_invoices/rpt16_results.csv) | Saved direct BTP test predictions and selected-class confidence |
+| [rpt16_run_metadata.json](data/synthetic_invoices/rpt16_run_metadata.json) | Public model label and request/result checksums |
 
-Regenerate the files with `python3 scripts/generate_synthetic_invoices.py`. The seed and row counts are fixed. `invoice_id` is only a row identifier: exclude it from XGBoost features. The RPT request uses it as `index_column`. Compare both models' predictions with the last 128 labeled rows of `payment_behavior.csv` by `invoice_id`. The test labels must remain hidden from each model during prediction; the RPT files already mask them.
+The saved results are included so the comparison works without SAP credentials. The raw BTP response and local `.env` are ignored. The [rare-fraud baseline and context-only sensitivity check](data/synthetic_invoices/README.md) live under `data/synthetic_invoices/experiments/`; their test labels must not be mixed with the main results.
 
-To run the XGBoost baseline in a Python environment:
+### Run the experiment notebooks
 
-```sh
-python3 -m pip install pandas scikit-learn xgboost
-python3 scripts/run_xgboost_invoices.py
-```
-
-The script prints accuracy, ROC AUC, precision, and recall for each target and writes `xgboost_results.csv` in the data directory. This is a **results file**, not a separate dataset. To run RPT-1.6 on the same rows, use an authorized SAP AI Core deployment:
-
-```sh
-export SAP_RPT_DEPLOYMENT_URL="https://YOUR-DEPLOYMENT-URL"
-export SAP_RPT_AUTH_TOKEN="YOUR-TEMPORARY-TOKEN"
-export SAP_RPT_RESOURCE_GROUP="default"
-python3 scripts/run_rpt16_invoices.py
-```
-
-Set those variables locally; do not commit credentials. The script sends `rpt16_request.json`, writes the raw `rpt16_response.json`, a scored `rpt16_results.csv`, and `rpt16_run_metadata.json`, and checks that SAP returned exactly the shared 128 test invoice IDs. The metadata records the request and result checksums plus a hash of the deployment URL; it does not store the token. If you used the [SAP-RPT Playground](https://rpt.cloud.sap/) instead, run `python3 scripts/run_rpt16_invoices.py --response path/to/exported_response.json` to score its JSON response; the metadata then marks it as an exported response rather than a direct BTP run. The request has 1,024 context rows and 128 prediction rows with two prediction columns, within SAP's documented limits for the standard model. RPT calls require your own access. The browser presentation still uses its separate educational scoring functions, so its displayed predictions are not benchmark results.
-
-The runner can also load a repository-root `.env` file with SAP AI Core service-key settings: `SAP_AI_CORE_API_URL`, `SAP_AI_CORE_AUTH_URL`, `SAP_AI_CORE_CLIENT_ID`, `SAP_AI_CORE_CLIENT_SECRET`, and `SAP_RPT_DEPLOYMENT_ID`. It obtains an OAuth token, fetches the deployment URL, and then makes the prediction request. `SAP_AI_CORE_RESOURCE_GROUP` and `SAP_RPT_MODEL_NAME` are optional. The configured model name is recorded as a label, so verify that it matches the actual deployment before presenting a model-version comparison. `RPT_DRY_RUN=true` prevents a live inference call.
-
-### Local API and Jupyter notebook
-
-From the repository root, install the experiment dependencies and start the API:
+Install Python dependencies from the repository root, then open these notebooks in order:
 
 ```sh
 python3 -m pip install -r requirements-experiment.txt
-python3 -m uvicorn api:app --host 127.0.0.1 --port 8000
 ```
 
-Open **http://127.0.0.1:8000/docs** for interactive API testing. `GET /api/experiment` returns the fixed 128-row test metrics and a few XGBoost examples. `POST /api/predictions/xgboost` accepts one new invoice and predicts both targets. `POST /api/experiment/rpt` sends the same fixed test split to your configured SAP-RPT-1.6 deployment, saves its results, and can incur SAP inference charges each time it is called. Without a deployment URL and token, it returns HTTP 503 with `RPT_NOT_CONFIGURED`. The API is local only; it is not deployed or connected to the presentation website.
+1. [XGBoost run](notebooks/xgboost_run.ipynb) trains on the main context rows and saves fresh XGBoost predictions.
+2. [RPT BTP run](notebooks/rpt_btp_run.ipynb) validates the masked request and reviews the saved direct BTP result. `RUN_LIVE_RPT = False` by default. To rerun inference, copy [.env.example](.env.example) to `.env`, enter your SAP AI Core settings, and set `RUN_LIVE_RPT = True` in that notebook. Each live run can incur SAP charges.
+3. [Compare saved results](notebooks/compare_saved_results.ipynb) verifies shared test IDs, true labels, and BTP checksums; it calculates the metrics and saves the [presentation comparison chart](notebooks/saved_results_comparison.png). It never calls BTP.
 
-An example request for a new invoice:
+The [combined walkthrough](notebooks/payment_behavior_experiment.ipynb) is optional. All four notebooks use a portable Python 3 kernel and include their executed outputs. If using the command line, run `python3 scripts/generate_synthetic_invoices.py`, `python3 scripts/run_xgboost_invoices.py`, then optionally `python3 scripts/run_rpt16_invoices.py` with a configured BTP deployment.
+The GitHub workflow validates the published dataset and executes the saved comparison notebook before deploying the website. It never makes a BTP request.
 
-```sh
-curl -X POST http://127.0.0.1:8000/api/predictions/xgboost \
-  -H 'Content-Type: application/json' \
-  -d '{"invoice_amount_eur":2400,"payment_terms_days":30,"customer_tenure_months":24,"prior_late_payment_rate":0.2,"open_invoice_count":2,"customer_segment":"midmarket","region":"DACH","billing_address_mismatch":0,"bank_account_changed_recently":0,"weekend_submission":0}'
-```
+### Read the results
 
-Open [the experiment notebook](notebooks/payment_behavior_experiment.ipynb) in Jupyter from the repository root. For a presentation screenshot, use the clearly labeled **“Screenshot this cell: XGBoost prediction results”** section; the same figure is saved as [xgboost_prediction_results.png](notebooks/xgboost_prediction_results.png). The next section runs the fraud classifier directly and lists all invoices it flagged. The notebook validates the supplied Playground table export against the shared dataset and plots [the XGBoost/RPT comparison](notebooks/model_comparison.png) on the same 128 test invoices. The export contains class labels but no model metadata or probabilities, so its RPT provenance is based on the supplied file and RPT ROC AUC cannot be calculated. The local API still expects `rpt16_results.csv` from a deployment response. The notebook and API use the same dataset and split as the command-line scripts.
+| Target | XGBoost | SAP RPT 1.6 BTP |
+| --- | --- | --- |
+| Paid late | 65.6% accuracy; 62.7% recall | 71.1% accuracy; 66.7% recall |
+| Fraud | 15 of 22 found; 9 false alarms | 10 of 22 found; 5 false alarms |
 
-For separate, reproducible runs, open these notebooks in order:
+RPT leads on late-payment metrics in this run. XGBoost finds more synthetic fraud cases, while RPT raises fewer false alarms and has slightly higher fraud precision. XGBoost ROC AUC uses saved class-1 probabilities. RPT ROC AUC is omitted because this BTP top-1 response lacks a positive-class score for every row. These results come from one fixed synthetic split and do not establish production performance.
 
-1. [XGBoost run](notebooks/xgboost_run.ipynb) trains on the fixed split and saves `xgboost_results.csv`.
-2. [RPT BTP run](notebooks/rpt_btp_run.ipynb) validates the masked request and loads `.env` automatically. Change `RUN_LIVE_RPT` to `True` in its run cell to call your deployment and save its response, results, and metadata. The live call may incur charges.
-3. [Compare saved results](notebooks/compare_saved_results.ipynb) checks matching invoice IDs and labels, calculates metrics, and saves [the comparison chart](notebooks/saved_results_comparison.png). It uses a validated direct BTP run when present; otherwise it explicitly labels the supplied Playground export. It never calls BTP.
+![XGBoost and SAP RPT 1.6 results on the shared synthetic test set](notebooks/saved_results_comparison.png)
 
-The older combined notebook remains a presentation walkthrough. The three notebooks above keep model execution separate from comparison, so rerunning a chart does not trigger another BTP request.
+For a Playground demo, upload the current [masked CSV](data/synthetic_invoices/exports/rpt_upload.csv) and show its prediction explanation, uncertainty, and relevant context rows. The archived Playground export belongs to the earlier eight-fraud-case dataset; it is **not** part of the main benchmark. Use the direct BTP results above for the quantitative slide.
+
+### Optional local API
+
+Install the same Python requirements and run `python3 -m uvicorn api:app --host 127.0.0.1 --port 8000`. Open `http://127.0.0.1:8000/docs`. The API trains XGBoost locally and can trigger a live RPT request through `POST /api/experiment/rpt` when SAP credentials are configured. The presentation website does not call this API.
 
 ## Educational scope
 
@@ -127,4 +111,4 @@ The site teaches data flow, not actual model benchmarking. Classical algorithms 
 - `src/styles.css`: responsive design, shared tokens, motion
 - `.devcontainer/devcontainer.json`: Codespaces environment
 
-Fonts use Google Fonts with local system fallbacks. No data is sent to a model or server.
+Fonts use Google Fonts with local system fallbacks. The website sends no invoice data to a model or server; the optional Python RPT runner sends the masked synthetic request to the configured BTP deployment.

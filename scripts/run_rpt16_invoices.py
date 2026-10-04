@@ -106,13 +106,13 @@ def connection_settings():
     }
 
 
-def load_response(path, connection=None):
+def load_response(path, connection=None, data=DATA):
     if path:
         return json.loads(path.read_text(encoding="utf-8"))
     connection = connection or connection_settings()
     request = Request(
         connection["deployment_url"] + "/predict",
-        data=(DATA / "rpt16_request.json").read_bytes(),
+        data=(data / "rpt16_request.json").read_bytes(),
         headers={
             "Authorization": f"Bearer {connection['token']}",
             "AI-Resource-Group": connection["resource_group"],
@@ -122,20 +122,20 @@ def load_response(path, connection=None):
     )
     with urlopen(request, timeout=300) as response:
         result = json.load(response)
-    (DATA / "rpt16_response.json").write_text(
+    (data / "rpt16_response.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )
     return result
 
 
-def score_response(response):
+def score_response(response, data=DATA):
     predictions = response.get("predictions")
     if not isinstance(predictions, list):
         raise ValueError("RPT response has no predictions array")
     by_id = {str(row["invoice_id"]): row for row in predictions}
     if len(by_id) != len(predictions):
         raise ValueError("RPT response contains duplicate invoice IDs")
-    with (DATA / "payment_behavior.csv").open(newline="", encoding="utf-8") as file:
+    with (data / "payment_behavior.csv").open(newline="", encoding="utf-8") as file:
         truth = list(csv.DictReader(file))[CONTEXT_ROWS:]
     expected_ids = {row["invoice_id"] for row in truth}
     if set(by_id) != expected_ids:
@@ -155,9 +155,9 @@ def score_response(response):
             output[f"predicted_{target}"] = predicted
             output[f"confidence_{target}"] = choices[0].get("confidence")
         results.append(output)
-    path = DATA / "rpt16_results.csv"
+    path = data / "rpt16_results.csv"
     with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=list(results[0]))
+        writer = csv.DictWriter(file, fieldnames=list(results[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(results)
     for target in TARGETS:
@@ -172,33 +172,26 @@ def score_response(response):
     return path
 
 
-def run_experiment(response_path=None):
+def run_experiment(response_path=None, data=DATA):
     """Score an RPT response and record enough provenance to identify the run."""
     load_local_env()
     if response_path is None and os.environ.get("RPT_DRY_RUN", "").lower() in ("1", "true", "yes", "on"):
         raise RuntimeError("RPT_DRY_RUN is enabled; no BTP inference request was sent")
     connection = connection_settings() if response_path is None else None
-    response = load_response(response_path, connection)
-    results_path = score_response(response)
-    deployment_url = connection["deployment_url"] if connection else ""
+    response = load_response(response_path, connection, data)
+    results_path = score_response(response, data)
     metadata = {
         "run_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": "btp_deployment" if response_path is None else "exported_response",
         "model_configured": connection["model_configured"] if connection else None,
-        "deployment_id": connection["deployment_id"] if connection else None,
-        "deployment_configuration_name": connection["deployment_configuration_name"] if connection else None,
-        "deployment_host": urlsplit(deployment_url).hostname if deployment_url else None,
-        "deployment_url_sha256": hashlib.sha256(deployment_url.encode()).hexdigest() if deployment_url else None,
-        "resource_group": connection["resource_group"] if connection else None,
-        "request_sha256": hashlib.sha256((DATA / "rpt16_request.json").read_bytes()).hexdigest(),
+        "request_sha256": hashlib.sha256((data / "rpt16_request.json").read_bytes()).hexdigest(),
         "response_sha256": hashlib.sha256(
             json.dumps(response, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest(),
         "results_sha256": hashlib.sha256(results_path.read_bytes()).hexdigest(),
-        "response_id": response.get("id"),
         "test_rows": len(response["predictions"]),
     }
-    (DATA / "rpt16_run_metadata.json").write_text(
+    (data / "rpt16_run_metadata.json").write_text(
         json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
     )
     return results_path
@@ -207,8 +200,9 @@ def run_experiment(response_path=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--response", type=Path, help="Use an exported RPT JSON response")
+    parser.add_argument("--data-dir", type=Path, default=DATA)
     args = parser.parse_args()
-    run_experiment(args.response)
+    run_experiment(args.response, args.data_dir)
 
 
 if __name__ == "__main__":

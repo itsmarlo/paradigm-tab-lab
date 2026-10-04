@@ -1,0 +1,9 @@
+{
+  "run_at_utc": "2026-10-03T22:17:41.511439+00:00",
+  "source": "btp_deployment",
+  "model_configured": "sap-rpt-1.6-large",
+  "request_sha256": "ee25a1f418c6e728fb5ceccef927a3246c6c8c6bf527a77d14a743a4d07fa54f",
+  "response_sha256": "44a7fc7d81a47dd02f6b58435a3024bb30a6e8cfad386064db13230e33881a3c",
+  "results_sha256": "3117863b002fcae06016097030c24bf06f845548255d9a15983507c76e8d1efd",
+  "test_rows": 128
+}

@@ -1,6 +1,8 @@
 """Local HTTP API for the shared invoice prediction experiment."""
 
 import asyncio
+import hashlib
+import json
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -112,11 +114,21 @@ def experiment():
     models, columns = fitted_models()
     xgboost_results = predict_frame(models, columns, test)
     rpt_path = DATA / "rpt16_results.csv"
+    metadata_path = DATA / "rpt16_run_metadata.json"
+    request_path = DATA / "rpt16_request.json"
     rpt_metrics = None
-    if rpt_path.exists():
+    if rpt_path.exists() and metadata_path.exists() and request_path.exists():
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
         rpt_results = pd.read_csv(rpt_path)
-        if rpt_results["invoice_id"].tolist() == test["invoice_id"].tolist() and all(
-            rpt_results[f"actual_{target}"].tolist() == test[target].tolist() for target in TARGETS
+        if (
+            metadata.get("source") == "btp_deployment"
+            and metadata.get("request_sha256") == hashlib.sha256(request_path.read_bytes()).hexdigest()
+            and metadata.get("results_sha256") == hashlib.sha256(rpt_path.read_bytes()).hexdigest()
+            and rpt_results["invoice_id"].tolist() == test["invoice_id"].tolist()
+            and all(
+                rpt_results[f"actual_{target}"].tolist() == test[target].tolist()
+                for target in TARGETS
+            )
         ):
             rpt_metrics = model_metrics(rpt_results, include_auc=False)
     return {

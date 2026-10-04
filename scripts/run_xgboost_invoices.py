@@ -1,5 +1,6 @@
 """Train an XGBoost baseline on the synthetic invoice split."""
 
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -12,8 +13,8 @@ from generate_synthetic_invoices import CONTEXT_ROWS, PREDICTION_ROWS, TARGETS
 DATA = Path(__file__).resolve().parents[1] / "data" / "synthetic_invoices"
 
 
-def load_split():
-    invoices = pd.read_csv(DATA / "payment_behavior.csv")
+def load_split(data=DATA):
+    invoices = pd.read_csv(data / "payment_behavior.csv")
     if len(invoices) != CONTEXT_ROWS + PREDICTION_ROWS:
         raise ValueError("The invoice dataset has an unexpected number of rows")
     train = invoices.iloc[:CONTEXT_ROWS]
@@ -63,8 +64,8 @@ def predict_frame(models, columns, frame):
     return results
 
 
-def main():
-    train, test = load_split()
+def main(data=DATA):
+    train, test = load_split(data)
     models, columns = train_models(train)
     results = predict_frame(models, columns, test)
     for target in TARGETS:
@@ -76,10 +77,13 @@ def main():
             f"precision={precision_score(test[target], predictions, zero_division=0):.3f}, "
             f"recall={recall_score(test[target], predictions, zero_division=0):.3f}"
         )
-    output = DATA / "xgboost_results.csv"
+    output = data / "xgboost_results.csv"
     results.to_csv(output, index=False)
     print(f"Predictions: {output}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data-dir", type=Path, default=DATA)
+    args = parser.parse_args()
+    main(args.data_dir)

@@ -1,13 +1,16 @@
 node_modules/
 dist/
-.env*
+.env
+.env.*
+!.env.example
+.DS_Store
 
 *.tsbuildinfo
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+notebooks/_local_archive/
 
-# Local SAP deployment outputs
-data/synthetic_invoices/rpt16_response.json
-data/synthetic_invoices/rpt16_results.csv
-data/synthetic_invoices/rpt16_run_metadata.json
+# Raw SAP responses can contain deployment details. Publish scored results and
+# the reduced provenance metadata instead.
+**/rpt16_response.json

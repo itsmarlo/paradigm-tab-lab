@@ -73,7 +73,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00005",
@@ -103,7 +103,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00007",
@@ -118,7 +118,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00008",
@@ -328,7 +328,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00022",
@@ -538,7 +538,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00036",
@@ -598,7 +598,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00040",
@@ -793,7 +793,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00053",
@@ -883,7 +883,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00059",
@@ -1138,7 +1138,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00076",
@@ -1228,7 +1228,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00082",
@@ -1588,7 +1588,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00106",
@@ -1918,7 +1918,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00128",
@@ -2068,7 +2068,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00138",
@@ -2173,7 +2173,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00145",
@@ -2203,7 +2203,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00147",
@@ -2308,7 +2308,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00154",
@@ -2533,7 +2533,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00169",
@@ -2548,7 +2548,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00170",
@@ -2593,7 +2593,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00173",
@@ -2758,7 +2758,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00184",
@@ -2788,7 +2788,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00186",
@@ -2908,7 +2908,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00194",
@@ -3133,7 +3133,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00209",
@@ -3358,7 +3358,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00224",
@@ -3373,7 +3373,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00225",
@@ -3388,7 +3388,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00226",
@@ -3463,7 +3463,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00231",
@@ -3613,7 +3613,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00241",
@@ -3778,7 +3778,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00252",
@@ -3823,7 +3823,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00255",
@@ -3853,7 +3853,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00257",
@@ -4168,7 +4168,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00278",
@@ -4288,7 +4288,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00286",
@@ -4648,7 +4648,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00310",
@@ -4753,7 +4753,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00317",
@@ -5053,7 +5053,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00337",
@@ -5068,7 +5068,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00338",
@@ -5113,7 +5113,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00341",
@@ -5443,7 +5443,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00363",
@@ -5518,7 +5518,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00368",
@@ -5668,7 +5668,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00378",
@@ -5758,7 +5758,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00384",
@@ -5863,7 +5863,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00391",
@@ -5953,7 +5953,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00397",
@@ -6058,7 +6058,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00404",
@@ -6313,7 +6313,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00421",
@@ -6343,7 +6343,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00423",
@@ -6388,7 +6388,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00426",
@@ -6673,7 +6673,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00445",
@@ -6688,7 +6688,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00446",
@@ -6763,7 +6763,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00451",
@@ -6778,7 +6778,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00452",
@@ -6898,7 +6898,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00460",
@@ -6958,7 +6958,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00464",
@@ -7183,7 +7183,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00479",
@@ -7303,7 +7303,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00487",
@@ -7348,7 +7348,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00490",
@@ -7408,7 +7408,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00494",
@@ -7423,7 +7423,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00495",
@@ -7543,7 +7543,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00503",
@@ -7573,7 +7573,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00505",
@@ -7663,7 +7663,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00511",
@@ -7708,7 +7708,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00514",
@@ -7798,7 +7798,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00520",
@@ -7888,7 +7888,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00526",
@@ -8248,7 +8248,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00550",
@@ -8353,7 +8353,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00557",
@@ -8608,7 +8608,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00574",
@@ -8638,7 +8638,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00576",
@@ -8773,7 +8773,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00585",
@@ -8953,7 +8953,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00597",
@@ -9013,7 +9013,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00601",
@@ -9133,7 +9133,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00609",
@@ -9208,7 +9208,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00614",
@@ -9358,7 +9358,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00624",
@@ -9493,7 +9493,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00633",
@@ -9553,7 +9553,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00637",
@@ -9673,7 +9673,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00645",
@@ -9703,7 +9703,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00647",
@@ -9793,7 +9793,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00653",
@@ -9823,7 +9823,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00655",
@@ -9838,7 +9838,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00656",
@@ -9898,7 +9898,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00660",
@@ -10048,7 +10048,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00670",
@@ -10333,7 +10333,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00689",
@@ -10348,7 +10348,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00690",
@@ -10513,7 +10513,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00701",
@@ -10723,7 +10723,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00715",
@@ -10783,7 +10783,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00719",
@@ -10813,7 +10813,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00721",
@@ -10873,7 +10873,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00725",
@@ -10978,7 +10978,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00732",
@@ -11128,7 +11128,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00742",
@@ -11158,7 +11158,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00744",
@@ -11188,7 +11188,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00746",
@@ -11203,7 +11203,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00747",
@@ -11218,7 +11218,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00748",
@@ -11353,7 +11353,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00757",
@@ -11473,7 +11473,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00765",
@@ -11683,7 +11683,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00779",
@@ -11743,7 +11743,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00783",
@@ -11953,7 +11953,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00797",
@@ -12133,7 +12133,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00809",
@@ -12208,7 +12208,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00814",
@@ -12238,7 +12238,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00816",
@@ -12268,7 +12268,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00818",
@@ -12328,7 +12328,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00822",
@@ -12358,7 +12358,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00824",
@@ -12403,7 +12403,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00827",
@@ -12793,7 +12793,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00853",
@@ -13198,7 +13198,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00880",
@@ -13333,7 +13333,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00889",
@@ -13348,7 +13348,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00890",
@@ -13408,7 +13408,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00894",
@@ -13528,7 +13528,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00902",
@@ -13618,7 +13618,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00908",
@@ -13678,7 +13678,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00912",
@@ -13828,7 +13828,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00922",
@@ -13888,7 +13888,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00926",
@@ -13963,7 +13963,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00931",
@@ -14008,7 +14008,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00934",
@@ -14023,7 +14023,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00935",
@@ -14098,7 +14098,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00940",
@@ -14263,7 +14263,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00951",
@@ -14308,7 +14308,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00954",
@@ -14323,7 +14323,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00955",
@@ -14398,7 +14398,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00960",
@@ -14413,7 +14413,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00961",
@@ -14488,7 +14488,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00966",
@@ -14623,7 +14623,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00975",
@@ -14833,7 +14833,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-00989",
@@ -15253,7 +15253,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 1,
       "paid_late": 1,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-01017",
@@ -15268,7 +15268,7 @@
       "bank_account_changed_recently": 1,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-01018",
@@ -15373,7 +15373,7 @@
       "bank_account_changed_recently": 0,
       "weekend_submission": 0,
       "paid_late": 0,
-      "is_fraud": 1
+      "is_fraud": 0
     },
     {
       "invoice_id": "SYN-01025",

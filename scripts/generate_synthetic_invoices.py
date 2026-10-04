@@ -1,6 +1,7 @@
 """Create repeatable synthetic invoice data for XGBoost and SAP-RPT-1.6."""
 
 import csv
+import argparse
 import json
 import math
 import random
@@ -10,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "synthetic_invoices"
 SEED = 20261002
+DEFAULT_FRAUD_INTERCEPT = -2.8
 CONTEXT_ROWS = 1024
 PREDICTION_ROWS = 128
 TARGETS = ("paid_late", "is_fraud")
@@ -28,7 +30,7 @@ FEATURES = [
 COLUMNS = ["invoice_id", *FEATURES, *TARGETS]
 
 
-def make_rows():
+def make_rows(fraud_intercept=DEFAULT_FRAUD_INTERCEPT):
     rng = random.Random(SEED)
     rows = []
     for index in range(CONTEXT_ROWS + PREDICTION_ROWS):
@@ -55,7 +57,7 @@ def make_rows():
         )
         probability = 1 / (1 + math.exp(-score))
         fraud_score = (
-            -4.2
+            fraud_intercept
             + 2.2 * address_mismatch
             + 2.5 * bank_change
             + 0.6 * weekend
@@ -84,17 +86,27 @@ def make_rows():
 
 def write_csv(path, rows):
     with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=COLUMNS)
+        writer = csv.DictWriter(file, fieldnames=COLUMNS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
 
-def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "exports").mkdir(exist_ok=True)
-    rows = make_rows()
+def main(out=OUT, fraud_intercept=DEFAULT_FRAUD_INTERCEPT, test_labels_from=None):
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "exports").mkdir(exist_ok=True)
+    rows = make_rows(fraud_intercept)
     context = rows[:CONTEXT_ROWS]
     holdout = rows[CONTEXT_ROWS:]
+    if test_labels_from is not None:
+        with test_labels_from.open(newline="", encoding="utf-8") as file:
+            reference = list(csv.DictReader(file))[CONTEXT_ROWS:]
+        if len(reference) != len(holdout):
+            raise ValueError("Reference test set has a different number of rows")
+        for row, original in zip(holdout, reference):
+            if any(str(row[column]) != original[column] for column in ["invoice_id", *FEATURES]):
+                raise ValueError("Reference test IDs or predictors differ")
+            for target in TARGETS:
+                row[target] = int(original[target])
     prompt_rows = context + [
         {**row, **{target: "[PREDICT]" for target in TARGETS}} for row in holdout
     ]
@@ -102,8 +114,8 @@ def main():
     for target in TARGETS:
         assert {row[target] for row in context} == {0, 1}
         assert {row[target] for row in holdout} == {0, 1}
-    write_csv(OUT / "payment_behavior.csv", rows)
-    write_csv(OUT / "exports" / "rpt_upload.csv", prompt_rows)
+    write_csv(out / "payment_behavior.csv", rows)
+    write_csv(out / "exports" / "rpt_upload.csv", prompt_rows)
     payload = {
         "prediction_config": {"target_columns": [
             {"name": target, "prediction_placeholder": "[PREDICT]", "task_type": "classification"}
@@ -126,9 +138,15 @@ def main():
             **{target: {"dtype": "numeric"} for target in TARGETS},
         },
     }
-    (OUT / "rpt16_request.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    print(f"Generated {len(context)} context rows and {len(holdout)} held-out rows in {OUT}")
+    (out / "rpt16_request.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"Generated {len(context)} context rows and {len(holdout)} held-out rows in {out}")
+    print(f"Fraud cases: context={sum(row['is_fraud'] for row in context)}, test={sum(row['is_fraud'] for row in holdout)}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=OUT)
+    parser.add_argument("--fraud-intercept", type=float, default=DEFAULT_FRAUD_INTERCEPT)
+    parser.add_argument("--test-labels-from", type=Path)
+    args = parser.parse_args()
+    main(args.output_dir, args.fraud_intercept, args.test_labels_from)
