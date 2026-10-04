@@ -66,7 +66,7 @@ The [main invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthe
 | [rpt16_results.csv](data/synthetic_invoices/rpt16_results.csv) | Saved direct BTP test predictions and selected-class confidence |
 | [rpt16_run_metadata.json](data/synthetic_invoices/rpt16_run_metadata.json) | Public model label and request/result checksums |
 
-The saved results are included so the comparison works without SAP credentials. The raw BTP response and local `.env` are ignored. The [rare-fraud baseline and context-only sensitivity check](data/synthetic_invoices/README.md) live under `data/synthetic_invoices/experiments/`; their test labels must not be mixed with the main results.
+The saved results are included so the comparison works without SAP credentials. The raw BTP response and local `.env` are ignored. The [rare-fraud baseline and context-only sensitivity check](archive/synthetic_invoice_experiments/README.md) are archived outside the main data folder; their test labels must not be mixed with the main results.
 
 ### Run the experiment notebooks
 

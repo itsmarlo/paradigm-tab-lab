@@ -15,9 +15,9 @@ The [before-and-after chart](fraud_context_enrichment_for_ppt.png) is a secondar
 To regenerate the scenario and rerun the models from the repository root:
 
 ```sh
-python3 scripts/generate_synthetic_invoices.py --output-dir data/synthetic_invoices/experiments/context_only --fraud-intercept -2.8 --test-labels-from data/synthetic_invoices/experiments/rare_fraud_baseline/payment_behavior.csv
-python3 scripts/run_xgboost_invoices.py --data-dir data/synthetic_invoices/experiments/context_only
-python3 scripts/run_rpt16_invoices.py --data-dir data/synthetic_invoices/experiments/context_only
+python3 scripts/generate_synthetic_invoices.py --output-dir archive/synthetic_invoice_experiments/context_only --fraud-intercept -2.8 --test-labels-from archive/synthetic_invoice_experiments/rare_fraud_baseline/payment_behavior.csv
+python3 scripts/run_xgboost_invoices.py --data-dir archive/synthetic_invoice_experiments/context_only
+python3 scripts/run_rpt16_invoices.py --data-dir archive/synthetic_invoice_experiments/context_only
 python3 scripts/plot_fraud_enrichment.py
 ```
 

@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "synthetic_invoices" / "experiments" / "rare_fraud_baseline"
+DATA = ROOT / "archive" / "synthetic_invoice_experiments" / "rare_fraud_baseline"
 OUTPUT = DATA / "model_tradeoff_with_playground.png"
 
 xgb = pd.read_csv(DATA / "xgboost_results.csv").sort_values("invoice_id").reset_index(drop=True)

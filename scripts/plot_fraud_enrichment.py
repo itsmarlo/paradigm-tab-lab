@@ -8,8 +8,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "data" / "synthetic_invoices"
-ORIGINAL = BASE / "experiments" / "rare_fraud_baseline"
-ENRICHED = BASE / "experiments" / "context_only"
+ARCHIVE = ROOT / "archive" / "synthetic_invoice_experiments"
+ORIGINAL = ARCHIVE / "rare_fraud_baseline"
+ENRICHED = ARCHIVE / "context_only"
 OUTPUT = ENRICHED / "fraud_context_enrichment_for_ppt.png"
 
 original_data = pd.read_csv(ORIGINAL / "payment_behavior.csv")

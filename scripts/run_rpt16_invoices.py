@@ -122,7 +122,9 @@ def load_response(path, connection=None, data=DATA):
     )
     with urlopen(request, timeout=300) as response:
         result = json.load(response)
-    (data / "rpt16_response.json").write_text(
+    raw_dir = data / ".local"
+    raw_dir.mkdir(exist_ok=True)
+    (raw_dir / "rpt16_response.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )
     return result
