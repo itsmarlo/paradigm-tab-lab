@@ -4,13 +4,22 @@
 
 An interactive TechEd presentation comparing classical machine learning, large language models, and tabular foundation models. The website uses React, TypeScript, and Vite without a backend or API keys. A separate local Python experiment compares XGBoost with SAP RPT 1.6 on synthetic invoices.
 
-## Use the published app
+## Start here
 
-Open **https://itsmarlo.github.io/paradigm-tab-lab/** to use the app directly. No GitHub account, Codespace, installation, or terminal is needed.
+| Goal | Start with |
+| --- | --- |
+| Explore the interactive presentation | [Open a GitHub Codespace](https://codespaces.new/itsmarlo/paradigm-tab-lab?quickstart=1) and open the port 5173 preview |
+| Run the presentation locally | Follow [Run locally](#run-locally) |
+| Test SAP RPT in the Playground | Upload the [masked invoice CSV](data/synthetic_invoices/exports/rpt_upload.csv) |
+| Inspect measured model results | Open the [comparison notebook](notebooks/compare_saved_results.ipynb) or read [the results](#read-the-results) |
 
-The app is hosted on GitHub Pages. Pushing changes to `main` automatically runs the behavior checks, builds the app, and publishes the updated website. The workflow sets the production asset path to `/paradigm-tab-lab/`, while Codespaces and local development continue to use `/`.
+The interactive website is an educational simulation. The Python notebooks contain the separate invoice experiment: XGBoost runs locally, and the saved SAP RPT predictions came from a direct BTP inference request. **No SAP credentials are needed** to browse the site or inspect the saved results.
 
-Deployment progress appears under the repository's **Actions → Publish Paradigm Lab**. If a deployment fails, the previously published version remains available. To roll back, revert the source commit and push to `main`.
+## GitHub Pages
+
+The [Publish Paradigm Lab workflow](.github/workflows/publish.yml) is configured to test, build, and publish the website after GitHub Pages is enabled with **GitHub Actions** as its source. Once a deployment succeeds, the site will be available at **https://itsmarlo.github.io/paradigm-tab-lab/**. Until then, use Codespaces or run the app locally.
+
+Deployment status appears under **Actions → Publish Paradigm Lab**. If a published change needs to be rolled back, revert the source commit and push to `main`.
 
 ## Develop in GitHub Codespaces
 
@@ -68,6 +77,8 @@ The [active invoice dataset](data/synthetic_invoices/README.md) has **1,152 synt
 
 The saved results are included so the comparison works without SAP credentials. Raw BTP responses are kept outside the repository, and local `.env` is ignored. Earlier [sensitivity studies](archive/synthetic_invoice_experiments/README.md) remain outside `data/`; their results must not be mixed with this 22-case test.
 
+The Playground upload is an **input**, not a scored result: the final 128 rows have `[PREDICT]` in both target columns. The Playground's AI summary alone does not show how many predictions were correct. Use a row-level export with the held-out labels to calculate Playground accuracy or recall; the BTP metrics below describe a separate direct run.
+
 ### Run the experiment notebooks
 
 Install Python dependencies from the repository root, then open these notebooks in order:
@@ -83,6 +94,12 @@ python3 -m pip install -r requirements-experiment.txt
 The [combined walkthrough](notebooks/payment_behavior_experiment.ipynb) is optional. All four notebooks use a portable Python 3 kernel and include their executed outputs. If using the command line, run `python3 scripts/generate_synthetic_invoices.py`, `python3 scripts/run_xgboost_invoices.py`, then optionally `python3 scripts/run_rpt16_invoices.py` with a configured BTP deployment.
 The GitHub workflow validates the published dataset and executes the saved comparison notebook before deploying the website. It never makes a BTP request.
 
+To check the published data without rerunning SAP inference:
+
+```sh
+python3 scripts/validate_published_experiment.py
+```
+
 ### Read the results
 
 | Target | XGBoost | SAP RPT 1.6 BTP |
@@ -95,6 +112,8 @@ RPT leads on late-payment metrics in this run. XGBoost finds more synthetic frau
 ![XGBoost and SAP RPT 1.6 results on the shared synthetic test set](notebooks/saved_results_comparison.png)
 
 For a Playground demo, upload the [masked CSV](data/synthetic_invoices/exports/rpt_upload.csv) and show its prediction explanation, uncertainty, and relevant context rows. The archived Playground export belongs to the earlier eight-case dataset and must not be mixed with this benchmark. Use the direct BTP results above for the quantitative slide.
+
+For an RPT fraud-recall experiment on the active dataset, see [fraud threshold evaluation](data/synthetic_invoices/README.md#evaluate-a-fraud-alert-threshold). It prepares validation and test requests outside the repository; measuring a new threshold requires live SAP inference and may incur charges.
 
 ### Optional local API
 
