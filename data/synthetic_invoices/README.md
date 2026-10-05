@@ -4,7 +4,7 @@
 
 The dataset uses seed `20261002` and fraud intercept `-2.8`. It contains 187 fraud labels in context and 22 in test. Late-payment labels are unchanged from the earlier rare-fraud scenario: 450 in context and 51 in test. These labels are generated from noisy formulas; they do not represent real invoices or verified fraud.
 
-The saved direct RPT run found **10 of 22 fraud cases** with **5 false alarms**. This is the strongest saved fraud-detection result for RPT in this repository, but the archived studies use different context or test labels, so their scores are not a controlled model-improvement comparison. The threshold experiment below is the next test for improving recall on this fixed dataset.
+On this fixed test set, XGBoost found **15 of 22 fraud cases** with **9 false alarms**; the saved direct RPT run found **10 of 22** with **5 false alarms**. The archived studies use different context or test labels, so their scores are separate sensitivity checks rather than additional results for this benchmark.
 
 | Columns | Meaning |
 | --- | --- |
@@ -40,7 +40,7 @@ The generator creates the labeled CSV, masked Playground CSV, and masked RPT JSO
 
 The [archived eight-case dataset](../../archive/synthetic_invoice_experiments/rare_fraud_baseline/README.md) is a separate experiment with different test labels. Do not combine its metrics with this run.
 
-## Evaluate a fraud alert threshold
+## Optional: evaluate an RPT fraud alert threshold
 
 The original RPT request returned only the most likely class, so its saved result cannot be used to choose a different fraud alert threshold. Generate two new requests with both class scores:
 

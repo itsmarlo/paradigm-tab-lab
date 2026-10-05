@@ -2,16 +2,16 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/itsmarlo/paradigm-tab-lab?quickstart=1)
 
-An interactive TechEd presentation comparing classical machine learning, large language models, and tabular foundation models. The website uses React, TypeScript, and Vite without a backend or API keys. A separate local Python experiment compares XGBoost with SAP RPT 1.6 on synthetic invoices.
+Paradigm Lab combines a reproducible **synthetic invoice benchmark** with an interactive guide to classical machine learning, large language models, and tabular foundation models. The benchmark compares XGBoost and SAP RPT 1.6 on one fixed test split; the website explains the three learning approaches with educational simulations. It uses React, TypeScript, and Vite without a backend or API keys.
 
 ## Start here
 
 | Goal | Start with |
 | --- | --- |
+| Explore the invoice benchmark | Open the [comparison notebook](notebooks/compare_saved_results.ipynb) or read [the results](#read-the-results) |
 | Explore the interactive presentation | [Open a GitHub Codespace](https://codespaces.new/itsmarlo/paradigm-tab-lab?quickstart=1) and open the port 5173 preview |
 | Run the presentation locally | Follow [Run locally](#run-locally) |
-| Test SAP RPT in the Playground | Upload the [masked invoice CSV](data/synthetic_invoices/exports/rpt_upload.csv) |
-| Inspect measured model results | Open the [comparison notebook](notebooks/compare_saved_results.ipynb) or read [the results](#read-the-results) |
+| Try the dataset in SAP RPT Playground | Upload the [masked invoice CSV](data/synthetic_invoices/exports/rpt_upload.csv) |
 
 The interactive website is an educational simulation. The Python notebooks contain the separate invoice experiment: XGBoost runs locally, and the saved SAP RPT predictions came from a direct BTP inference request. **No SAP credentials are needed** to browse the site or inspect the saved results.
 
@@ -62,9 +62,9 @@ Use the navigation to explore each experiment. **Auto Demo** walks through class
 - LLM: enter a sentence, explore the sequence, choose a candidate, and repeatedly generate tokens.
 - Tabular FM: switch between pretraining and inference. Edit context values and labels, add/remove rows, adjust the query, and predict without a training step.
 
-## Synthetic XGBoost and SAP RPT 1.6 experiment
+## Synthetic invoice benchmark
 
-The [active invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthetic invoices**. The first 1,024 rows are XGBoost training data and RPT context; the last 128 are the shared test set. The two targets are `paid_late` and `is_fraud`. There are **187 fraud labels in context and 22 in test**. These are generated labels, not real payment or fraud determinations.
+This benchmark compares **XGBoost** and **SAP RPT 1.6** on the same fixed split and two targets: `paid_late` and `is_fraud`. The [active invoice dataset](data/synthetic_invoices/README.md) has **1,152 synthetic invoices**: 1,024 labeled rows for XGBoost training and RPT context, followed by 128 held-out test rows. There are **187 fraud labels in context and 22 in test**. The labels are generated, not real payment or fraud determinations.
 
 | File | Purpose |
 | --- | --- |
@@ -77,7 +77,7 @@ The [active invoice dataset](data/synthetic_invoices/README.md) has **1,152 synt
 
 The saved results are included so the comparison works without SAP credentials. Raw BTP responses are kept outside the repository, and local `.env` is ignored. Earlier [sensitivity studies](archive/synthetic_invoice_experiments/README.md) remain outside `data/`; their results must not be mixed with this 22-case test.
 
-The Playground upload is an **input**, not a scored result: the final 128 rows have `[PREDICT]` in both target columns. The Playground's AI summary alone does not show how many predictions were correct. Use a row-level export with the held-out labels to calculate Playground accuracy or recall; the BTP metrics below describe a separate direct run.
+The Playground upload is an **input**, not a scored result: the final 128 rows have `[PREDICT]` in both target columns. The Playground's AI summary alone does not show how many predictions were correct. A row-level export must be matched to the held-out labels before adding Playground metrics to the benchmark.
 
 ### Run the experiment notebooks
 
@@ -107,13 +107,13 @@ python3 scripts/validate_published_experiment.py
 | Paid late | 65.6% accuracy; 62.7% recall | 71.1% accuracy; 66.7% recall |
 | Fraud | 15 of 22 found; 9 false alarms | 10 of 22 found; 5 false alarms |
 
-RPT leads on late-payment metrics in this run. XGBoost finds more synthetic fraud cases, while RPT raises fewer false alarms and has slightly higher fraud precision. XGBoost ROC AUC uses saved class-1 probabilities. RPT ROC AUC is omitted because this BTP top-1 response lacks a positive-class score for every row. These results come from one fixed synthetic split and do not establish production performance.
+The results show a trade-off: RPT scores higher on late-payment accuracy and recall; XGBoost finds more synthetic fraud cases, while RPT raises fewer false alarms. XGBoost ROC AUC uses saved class-1 probabilities. RPT ROC AUC is omitted because this BTP top-1 response lacks a positive-class score for every row. One fixed synthetic split does not establish production performance or a general ranking between the models.
 
 ![XGBoost and SAP RPT 1.6 results on the shared synthetic test set](notebooks/saved_results_comparison.png)
 
 For a Playground demo, upload the [masked CSV](data/synthetic_invoices/exports/rpt_upload.csv) and show its prediction explanation, uncertainty, and relevant context rows. The archived Playground export belongs to the earlier eight-case dataset and must not be mixed with this benchmark. Use the direct BTP results above for the quantitative slide.
 
-For an RPT fraud-recall experiment on the active dataset, see [fraud threshold evaluation](data/synthetic_invoices/README.md#evaluate-a-fraud-alert-threshold). It prepares validation and test requests outside the repository; measuring a new threshold requires live SAP inference and may incur charges.
+The [dataset guide](data/synthetic_invoices/README.md) documents the split, feature columns, and an optional fraud-threshold experiment.
 
 ### Optional local API
 
