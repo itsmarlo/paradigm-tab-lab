@@ -1,0 +1,28 @@
+name: Validate benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements-experiment.txt
+      - run: python -m pip install -r requirements-experiment.txt
+      - run: python scripts/validate_published_experiment.py
+      - name: Execute saved comparison notebook
+        env:
+          MPLBACKEND: Agg
+        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/compare_saved_results.ipynb > /dev/null

@@ -1,4 +1,4 @@
-"""Plot the fixed-test fraud experiment for a presentation slide."""
+"""Plot the fixed-test fraud experiment."""
 
 from pathlib import Path
 

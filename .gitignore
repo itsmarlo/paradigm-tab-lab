@@ -1,11 +1,9 @@
-node_modules/
-dist/
+.venv/
 .env
 .env.*
 !.env.example
 .DS_Store
 
-*.tsbuildinfo
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
