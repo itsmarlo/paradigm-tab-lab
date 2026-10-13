@@ -10,8 +10,12 @@ from sklearn.metrics import confusion_matrix
 from generate_synthetic_invoices import CONTEXT_ROWS, PREDICTION_ROWS, TARGETS, make_rows
 
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "synthetic_invoices"
-source = pd.read_csv(DATA / "payment_behavior.csv")
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data" / "synthetic_invoices"
+# The working CSV now has revised fraud labels. Saved 2026 predictions belong
+# to the original 22-fraud-case source, retained separately for validation.
+SOURCE = ROOT / "archive" / "synthetic_invoice_experiments" / "published_baseline" / "payment_behavior.csv"
+source = pd.read_csv(SOURCE)
 assert len(source) == CONTEXT_ROWS + PREDICTION_ROWS == 1152
 assert source.invoice_id.is_unique and not source.isna().any().any()
 assert source[list(TARGETS)].isin([0, 1]).all().all()

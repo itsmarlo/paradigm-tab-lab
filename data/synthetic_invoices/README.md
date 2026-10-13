@@ -1,10 +1,10 @@
-# Active synthetic invoice dataset
+# Working synthetic invoice dataset and historical model outputs
 
-`payment_behavior.csv` is the active labeled dataset for the XGBoost and SAP RPT 1.6 comparison. It has 1,152 synthetic invoices: the first 1,024 are XGBoost training rows and RPT context rows; the final 128 are the shared test rows. `invoice_id` is a row key, not a predictor. Both models predict `paid_late` and `is_fraud`, where `1` means yes.
+The working `payment_behavior.csv` has revised fraud labels and matches the frozen [context engineering source](../semantic_ablation/source_snapshot.csv). It has 1,152 synthetic invoices: the first 1,024 can supply training or context rows, and the final 128 form the test set. The current holdout has **8 fraud cases**. `invoice_id` is a row key, not a predictor. Both targets use `1` for yes.
 
-The dataset uses seed `20261002` and fraud intercept `-2.8`. It contains 187 fraud labels in context and 22 in test. Late-payment labels are unchanged from the earlier rare-fraud scenario: 450 in context and 51 in test. These labels are generated from noisy formulas; they do not represent real invoices or verified fraud.
+The saved `xgboost_results.csv`, `rpt16_results.csv`, masked request and export in this directory belong to the **historical 22-case version**, preserved as an [archived source](../../archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv). Those saved predictions do not match the working CSV's fraud labels. Use the [current before/after notebook](../../notebooks/context_engineering/07_before_after_context_engineering.ipynb) for the revised-label model comparison.
 
-On this fixed test set, XGBoost found **15 of 22 fraud cases** with **9 false alarms**; the saved direct RPT run found **10 of 22** with **5 false alarms**. The archived studies use different context or test labels, so their scores are separate sensitivity checks rather than additional results for this benchmark.
+The historical dataset used seed `20261002` and fraud intercept `-2.8`. It had 187 fraud labels in context and 22 in test. Its saved XGBoost run found **15 of 22 fraud cases** with **9 false alarms**; the saved direct RPT run found **10 of 22** with **5 false alarms**. These labels are generated from noisy formulas; they do not represent real invoices or verified fraud.
 
 | Columns | Meaning |
 | --- | --- |
@@ -16,7 +16,8 @@ On this fixed test set, XGBoost found **15 of 22 fraud cases** with **9 false al
 
 | File | Role |
 | --- | --- |
-| `payment_behavior.csv` | One labeled source dataset for both models |
+| `payment_behavior.csv` | Current working source with eight holdout fraud cases; not the source of the historical saved predictions |
+| [archived payment_behavior.csv](../../archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv) | Historical source for the saved XGBoost and RPT outputs below |
 | `exports/rpt_upload.csv` | Playground upload: same 1,152 rows, with both test targets replaced by `[PREDICT]` |
 | `rpt16_request.json` | Equivalent masked JSON request for SAP AI Core |
 | `xgboost_results.csv` | XGBoost predictions and class-1 probabilities on the final 128 rows |
@@ -27,7 +28,7 @@ Raw SAP responses are kept outside the repository; repository-root `.env` is ign
 The metadata's `model_configured` field is the local configuration label; confirm it against the SAP deployment configuration when describing the model version publicly.
 XGBoost fits a separate classifier for each target and weights the fraud class using the context class ratio; its saved class labels use a 0.5 probability threshold. RPT receives labeled context rows and returns top-1 class predictions without a matching class-weight setting. Both see the same predictors and hidden test labels, but their modeling procedures differ.
 
-## Reproduce the active experiment
+## Reproduce the historical 22-case experiment
 
 From the repository root, install `requirements-experiment.txt`, then run:
 
@@ -36,13 +37,13 @@ python3 scripts/generate_synthetic_invoices.py
 python3 scripts/run_xgboost_invoices.py
 ```
 
-The generator creates the labeled CSV, masked Playground CSV, and masked RPT JSON request. Running `scripts/run_rpt16_invoices.py` sends that request to a configured SAP BTP deployment. To review the saved results without making a request, open the three notebooks in the order documented in the root README. The comparison notebook checks that both models' test IDs and actual labels match this dataset and that the saved BTP request/result hashes match its metadata.
+The generator overwrites the working eight-case CSV with the historical 22-case labels, then creates the masked Playground CSV and RPT JSON request. Running `scripts/run_rpt16_invoices.py` sends that request to a configured SAP BTP deployment only when its source labels match the request. To review the historical saved results without a new request, open [compare_saved_results.ipynb](../../notebooks/historical_22_case_experiment/compare_saved_results.ipynb); it uses the archived labels and checks both models' test IDs, actual labels, and saved BTP hashes.
 
-The [archived eight-case dataset](../../archive/synthetic_invoice_experiments/rare_fraud_baseline/README.md) is a separate experiment with different test labels. Do not combine its metrics with this run.
+The [other archived eight-case dataset](../../archive/synthetic_invoice_experiments/rare_fraud_baseline/README.md) is a separate experiment. Do not combine its metrics with this run or the current context engineering benchmark.
 
-## Optional: evaluate an RPT fraud alert threshold
+## Optional: evaluate a historical RPT fraud alert threshold
 
-The original RPT request returned only the most likely class, so its saved result cannot be used to choose a different fraud alert threshold. Generate two new requests with both class scores:
+The historical RPT request returned only the most likely class, so its saved result cannot be used to choose a different fraud alert threshold. The script defaults to the archived 22-case labels that match that request. Generate two new requests with both class scores:
 
 ```sh
 python3 scripts/evaluate_rpt_fraud_threshold.py

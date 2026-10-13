@@ -1,12 +1,43 @@
 # Synthetic Invoice Benchmark
 
-This repository compares two tabular prediction approaches on one reproducible, synthetic invoice dataset: **locally trained XGBoost** and **SAP RPT 1.6 in-context inference**. Both predict late payment and fraud on the same 128 held-out invoices. The notebooks, saved predictions, and validation script let readers inspect the comparison without SAP credentials.
+## SAP TechEd 2026 context engineering study
+
+The [notebook index](notebooks/README.md) separates one controlled study into three groups: [before context engineering](notebooks/before_context_engineering/README.md), [context engineering methods](notebooks/context_engineering/README.md), and [after context engineering](notebooks/after_context_engineering/README.md). All three use the same frozen source and 128-invoice holdout. The [experiment assessment](reports/experiment_assessment.md) explains the findings and limits.
+
+The current study freezes its input as [source_snapshot.csv](data/semantic_ablation/source_snapshot.csv): 1,152 synthetic invoices with **8 fraud cases in the final 128**. It matches the working `payment_behavior.csv`, whose fraud labels were revised after the historical SAP run. Current results and row-level predictions are in `data/context_benchmark/` and `data/semantic_ablation/`; figures are in `reports/figures/`. The historical 22-case scores below use a separate [archived source](archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv).
+
+To validate selection logic and rebuild the published figures and Markdown from saved results:
+
+```sh
+python -m pytest -q tests/
+python scripts/validate_context_benchmark.py
+python scripts/build_context_report.py
+```
+
+The runners default to local dry runs. Add `--live` to call a configured SAP deployment:
+
+```sh
+python scripts/run_context_benchmark.py size --live
+python scripts/run_context_benchmark.py selection_validation --live
+python scripts/run_context_benchmark.py selection_holdout --live
+python scripts/run_context_benchmark.py noise --live
+python scripts/run_context_benchmark.py quality --live
+python scripts/run_semantic_ablation.py --live
+python scripts/run_semantic_validation.py --live
+python scripts/run_feature_selection_ablation.py --live
+```
+
+Each runner resumes completed conditions. The 128-row validation slice is used to choose the reported global context strategy; the final 128-row holdout is reserved for evaluation. The semantic study uses separate fixed 512-row context samples and a verified naming/category mapping. The source has no missing values or invalid categorical codes, so the cleaned S4 and S5 conditions are identity controls. Query-specific methods require one SAP request per held-out row and may hit API rate limits.
+
+## Historical saved model comparison (22 fraud cases)
+
+The section below documents the earlier XGBoost and SAP RPT run. Its saved predictions use the [archived original labels](archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv), while the current context engineering study uses eight holdout fraud cases. Do not combine their scores. Both historical models predict late payment and fraud on the same 128 held-out invoice IDs.
 
 ## Experiment design
 
 | Item | Description |
 | --- | --- |
-| Dataset | 1,152 generated invoices with a fixed seed |
+| Dataset | 1,152 generated invoices with the archived original labels |
 | Split | First 1,024 rows for XGBoost training and RPT context; final 128 rows for testing |
 | Targets | `paid_late` and `is_fraud`, with `1` meaning yes |
 | Test positives | 51 late payments and 22 fraud cases |
@@ -27,29 +58,29 @@ RPT scored higher on late-payment accuracy and recall in this test split. XGBoos
 
 ## Check the published results
 
-From the repository root, install the Python dependencies and validate the dataset, masked requests, saved predictions, and RPT provenance:
+From the repository root, install the Python dependencies and validate the archived source, masked requests, saved predictions, and RPT provenance:
 
 ```sh
 python3 -m pip install -r requirements-experiment.txt
 python3 scripts/validate_published_experiment.py
 ```
 
-Open [compare_saved_results.ipynb](notebooks/compare_saved_results.ipynb) to recompute the metrics and chart. It checks the shared test IDs and true labels, as well as the saved RPT request/result checksums. No SAP request is made.
+Open [compare_saved_results.ipynb](notebooks/historical_22_case_experiment/compare_saved_results.ipynb) to recompute the historical metrics and chart. It checks the shared test IDs and true labels, as well as the saved RPT request/result checksums. No SAP request is made.
 
-To regenerate the dataset and rerun XGBoost locally, use [xgboost_run.ipynb](notebooks/xgboost_run.ipynb) or run:
+To regenerate the historical dataset and rerun XGBoost locally, use [xgboost_run.ipynb](notebooks/historical_22_case_experiment/xgboost_run.ipynb) for a non-overwriting notebook run, or run:
 
 ```sh
 python3 scripts/generate_synthetic_invoices.py
 python3 scripts/run_xgboost_invoices.py
 ```
 
-These commands overwrite the corresponding saved data and XGBoost results. The generator uses a fixed seed. [rpt_btp_run.ipynb](notebooks/rpt_btp_run.ipynb) reviews the saved direct BTP result with live inference off by default (`RUN_LIVE_RPT = False`). To make a new request, copy [.env.example](.env.example) to `.env`, configure your SAP AI Core deployment, and explicitly enable live inference in the notebook. A live run can incur SAP charges. The [combined walkthrough](notebooks/payment_behavior_experiment.ipynb) is optional.
+These commands overwrite the working dataset and XGBoost results with the historical 22-case version; run them only when you intend to replace the current 8-case source. The generator uses a fixed seed. [rpt_btp_run.ipynb](notebooks/historical_22_case_experiment/rpt_btp_run.ipynb) reviews the saved direct BTP result with live inference off by default (`RUN_LIVE_RPT = False`). To make a new request, copy [.env.example](.env.example) to `.env`, configure your SAP AI Core deployment, and explicitly enable live inference in the notebook. A live run can incur SAP charges. The [combined walkthrough](notebooks/historical_22_case_experiment/payment_behavior_experiment.ipynb) is optional.
 
 ## Data files
 
 | File | Purpose |
 | --- | --- |
-| [payment_behavior.csv](data/synthetic_invoices/payment_behavior.csv) | Labeled source dataset |
+| [archived payment_behavior.csv](archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv) | Labels used by the historical saved predictions |
 | [exports/rpt_upload.csv](data/synthetic_invoices/exports/rpt_upload.csv) | Playground input with both targets masked as `[PREDICT]` in test rows |
 | [rpt16_request.json](data/synthetic_invoices/rpt16_request.json) | Equivalent masked BTP request |
 | [xgboost_results.csv](data/synthetic_invoices/xgboost_results.csv) | Saved XGBoost predictions and class-1 probabilities |
@@ -60,8 +91,8 @@ The Playground CSV is an input, **not a scored result**. A Playground summary ca
 
 ## Repository layout
 
-- `data/synthetic_invoices/`: active dataset, masked inputs, saved outputs, and data guide
-- `notebooks/`: model runs and saved-result comparison
+- `data/synthetic_invoices/`: working dataset and historical saved model outputs; read its guide before mixing them
+- `notebooks/`: before, methods, and after groups for the current study, plus the historical 22-case run
 - `scripts/`: generation, inference, validation, and analysis helpers
 - `archive/`: separate earlier experiments
 - `api.py`: optional local HTTP interface for invoice predictions and experiment metrics

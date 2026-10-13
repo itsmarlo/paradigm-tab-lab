@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA = ROOT / "data/synthetic_invoices"
+DEFAULT_SOURCE = ROOT / "archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv"
 CONTEXT_COUNT = 1024
 TEST_COUNT = 128
 VALIDATION_COUNT = 128
@@ -46,8 +47,11 @@ def make_request(rows, context_ids, query_ids, original):
     return payload
 
 
-def prepare(data, output):
-    rows = read_rows(data / "payment_behavior.csv")
+def prepare(data, output, source=DEFAULT_SOURCE):
+    from run_rpt16_invoices import validate_request_source
+
+    validate_request_source(data, source)
+    rows = read_rows(source)
     if len(rows) != CONTEXT_COUNT + TEST_COUNT:
         raise ValueError("Expected 1,024 context and 128 test rows")
     original = json.loads((data / "rpt16_request.json").read_text(encoding="utf-8"))
@@ -117,8 +121,8 @@ def f2(tp, fp, fn):
     return 5 * tp / (5 * tp + 4 * fn + fp) if tp else 0.0
 
 
-def score(data, output, validation_response, test_response):
-    rows = read_rows(data / "payment_behavior.csv")
+def score(data, output, validation_response, test_response, source=DEFAULT_SOURCE):
+    rows = read_rows(source)
     truth = {row["invoice_id"]: row for row in rows}
     validation_request = json.loads((output / "validation_request.json").read_text(encoding="utf-8"))
     validation_ids = {row["invoice_id"] for row in validation_request["rows"] if row["is_fraud"] == "[PREDICT]"}
@@ -142,6 +146,8 @@ def score(data, output, validation_response, test_response):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA)
+    parser.add_argument("--source-csv", type=Path, default=DEFAULT_SOURCE,
+                        help="Labels matching the saved request; defaults to the archived 22-case source")
     parser.add_argument("--output-dir", type=Path, default=Path(tempfile.gettempdir()) / "tfm-rpt-threshold")
     parser.add_argument("--validation-response", type=Path)
     parser.add_argument("--test-response", type=Path)
@@ -149,9 +155,10 @@ def main():
     if bool(args.validation_response) != bool(args.test_response):
         parser.error("Provide both response paths to score the experiment")
     if args.validation_response:
-        score(args.data_dir, args.output_dir, args.validation_response, args.test_response)
+        score(args.data_dir, args.output_dir, args.validation_response, args.test_response,
+              args.source_csv)
     else:
-        prepare(args.data_dir, args.output_dir)
+        prepare(args.data_dir, args.output_dir, args.source_csv)
 
 
 if __name__ == "__main__":

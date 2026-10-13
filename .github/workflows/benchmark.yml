@@ -22,7 +22,19 @@ jobs:
           cache-dependency-path: requirements-experiment.txt
       - run: python -m pip install -r requirements-experiment.txt
       - run: python scripts/validate_published_experiment.py
+      - run: python scripts/validate_context_benchmark.py
+      - run: python -m pytest -q tests/
       - name: Execute saved comparison notebook
         env:
           MPLBACKEND: Agg
-        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/compare_saved_results.ipynb > /dev/null
+        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/historical_22_case_experiment/compare_saved_results.ipynb > /dev/null
+      - name: Execute current before and after notebook
+        env:
+          MPLBACKEND: Agg
+        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/context_engineering/07_before_after_context_engineering.ipynb > /dev/null
+      - name: Execute before and after benchmarks
+        env:
+          MPLBACKEND: Agg
+        run: |
+          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/before_context_engineering/01_random_context_baseline.ipynb > /dev/null
+          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/after_context_engineering/01_balanced_context_benchmark.ipynb > /dev/null

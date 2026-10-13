@@ -14,6 +14,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
+import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from generate_synthetic_invoices import CONTEXT_ROWS, TARGETS
@@ -21,6 +22,33 @@ from generate_synthetic_invoices import CONTEXT_ROWS, TARGETS
 
 DATA = Path(__file__).resolve().parents[1] / "data" / "synthetic_invoices"
 ROOT = DATA.parents[1]
+
+
+def validate_request_source(data=DATA, source_path=None):
+    """Reject a saved request whose labeled rows differ from its source CSV."""
+    source_path = source_path or data / "payment_behavior.csv"
+    source = pd.read_csv(source_path)
+    request = json.loads((data / "rpt16_request.json").read_text(encoding="utf-8"))
+    requested = pd.DataFrame(request["rows"])
+    if len(source) != len(requested) or len(source) != CONTEXT_ROWS + 128:
+        raise ValueError("RPT request and source must contain the same 1,152 invoices")
+    try:
+        pd.testing.assert_frame_equal(
+            requested.drop(columns=list(TARGETS)).reset_index(drop=True),
+            source.drop(columns=list(TARGETS)).reset_index(drop=True),
+            check_dtype=False,
+        )
+        for target in TARGETS:
+            actual_context = pd.to_numeric(requested[target].iloc[:CONTEXT_ROWS])
+            if not actual_context.reset_index(drop=True).equals(
+                source[target].iloc[:CONTEXT_ROWS].reset_index(drop=True)
+            ):
+                raise ValueError(f"RPT request has stale {target} context labels")
+            if not requested[target].iloc[CONTEXT_ROWS:].eq("[PREDICT]").all():
+                raise ValueError(f"RPT request does not mask held-out {target} labels")
+    except AssertionError as error:
+        raise ValueError("RPT request features or invoice IDs differ from the source CSV") from error
+    return source
 
 
 def load_local_env():
@@ -131,14 +159,14 @@ def load_response(path, connection=None, data=DATA):
     return result
 
 
-def score_response(response, data=DATA):
+def score_response(response, data=DATA, source_path=None):
     predictions = response.get("predictions")
     if not isinstance(predictions, list):
         raise ValueError("RPT response has no predictions array")
     by_id = {str(row["invoice_id"]): row for row in predictions}
     if len(by_id) != len(predictions):
         raise ValueError("RPT response contains duplicate invoice IDs")
-    with (data / "payment_behavior.csv").open(newline="", encoding="utf-8") as file:
+    with (source_path or data / "payment_behavior.csv").open(newline="", encoding="utf-8") as file:
         truth = list(csv.DictReader(file))[CONTEXT_ROWS:]
     expected_ids = {row["invoice_id"] for row in truth}
     if set(by_id) != expected_ids:
@@ -175,14 +203,15 @@ def score_response(response, data=DATA):
     return path
 
 
-def run_experiment(response_path=None, data=DATA):
+def run_experiment(response_path=None, data=DATA, source_path=None):
     """Score an RPT response and record enough provenance to identify the run."""
+    validate_request_source(data, source_path)
     load_local_env()
     if response_path is None and os.environ.get("RPT_DRY_RUN", "").lower() in ("1", "true", "yes", "on"):
         raise RuntimeError("RPT_DRY_RUN is enabled; no BTP inference request was sent")
     connection = connection_settings() if response_path is None else None
     response = load_response(response_path, connection, data)
-    results_path = score_response(response, data)
+    results_path = score_response(response, data, source_path)
     metadata = {
         "run_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": "btp_deployment" if response_path is None else "exported_response",
