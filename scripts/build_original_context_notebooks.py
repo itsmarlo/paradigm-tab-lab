@@ -88,21 +88,21 @@ display(pd.DataFrame([{'context_rows': budget, 'prediction_rows': len(holdout),
                        'target': sample['prediction_config']['target_columns'][0]['name'],
                        'query_targets_masked': True, 'other_target_excluded': True}]))
 """),
-    md("## Step 4: train and score the models\nXGBoost is fit on the selected rows with the same configuration used by the context benchmark. SAP RPT receives those rows in its request, with weights fixed. `scripts/run_original_context_comparison.py` saves row-level predictions and summary metrics; use `--live` only to fill missing SAP conditions. No call to SAP is made by this notebook."),
+    md("## Step 4: score SAP RPT\nSAP RPT receives the selected rows in its request, with weights fixed. Saved predictions and metrics are reused here; this notebook does not call SAP. The paired random and balanced conditions are the context-selection comparison."),
     code("""results_path = ROOT / 'data/original_context_comparison/results.csv'
 results = pd.read_csv(results_path)
-expected = {(strategy, target, model) for strategy in ('random', 'balanced')
-            for target in targets for model in ('XGBoost', 'SAP-RPT')}
-available = set(zip(results.strategy, results.target, results.model))
-display(results[['strategy', 'target', 'model', 'context_positives', 'true_positives',
-                 'false_positives', 'precision', 'recall', 'f1']].round(3))
-print('Conditions complete:', len(available & expected), 'of', len(expected))
+rpt = results[results.model == 'SAP-RPT'].copy()
+expected = {(strategy, target) for strategy in ('random', 'balanced') for target in targets}
+available = set(zip(rpt.strategy, rpt.target))
+display(rpt[['strategy', 'target', 'context_rows', 'context_positives',
+             'true_positives', 'false_positives', 'precision', 'recall', 'f1']].round(3))
+print('SAP RPT conditions complete:', len(available & expected), 'of', len(expected))
 """),
-    md("## Checks and interpretation\nThe first benchmark remains the saved 1,024-row run in `notebooks/before_context_engineering/original_128/`. The 128-row random control and balanced treatment use the same source, target labels, test IDs, context selection seed, and model procedures. XGBoost keeps the original model seed (20261002). In this one-seed run, balancing fraud context raises XGBoost detections from 10 to 16 and false alarms from 20 to 32; SAP RPT detections rise from 10 to 16 and false alarms from 3 to 12. The data are synthetic and the test set is fixed, so these changes are descriptive."),
+    md("## Checks and interpretation\nThe first benchmark remains the saved 1,024-row run in `notebooks/before_context_engineering/original_128/`. The 128-row random control and balanced treatment use the same source, target labels, test IDs, context budget, and selection seed. In this one-seed run, balancing fraud context raises SAP RPT detections from 10 to 16 and false alarms from 3 to 12. The data are synthetic and the test set is fixed, so this is a descriptive tradeoff."),
 ])
 
 write('after_context_engineering/01_original_22_case_after_benchmark.ipynb', [
-    md("# After context engineering: SAP RPT on the original data\n\n## tl;dr\nAt the same 128-row context budget, balanced examples raise SAP RPT fraud recall from **45.5% to 72.7%** and F1 from **0.571 to 0.640**. The model finds **16 rather than 10 of 22** fraud cases, while false alarms rise from **3 to 12**. Late-payment F1 changes from **0.511 to 0.505**. Against the unchanged XGBoost benchmark, balanced SAP RPT finds **16 versus 15** fraud cases, with **12 versus 9** false alarms and F1 **0.640 versus 0.652**. This last comparison is descriptive because XGBoost trained on 1,024 rows while SAP RPT received 128 context rows."),
+    md("# After context engineering: SAP RPT on the original data\n\n## tl;dr\nBalanced context improves SAP RPT fraud recall on this test set, but does **not establish an overall performance gain**. At the same 128-row context budget, fraud recall rises from **45.5% to 72.7%** and F1 from **0.571 to 0.640**. The model finds **16 rather than 10 of 22** fraud cases, while false alarms rise from **3 to 12**. Late-payment F1 changes from **0.511 to 0.505**. Against the unchanged XGBoost benchmark, balanced SAP RPT finds **16 versus 15** fraud cases, with **12 versus 9** false alarms and F1 **0.640 versus 0.652**. This last comparison is descriptive because XGBoost trained on 1,024 rows while SAP RPT received 128 context rows."),
     md("## Context & methods\nThe source, labels and final 128 test invoices are identical in both conditions. The first SAP RPT benchmark used 1,024 labeled examples and carried both targets in its request. The controlled comparison uses 128 examples in each condition, selection seed 11, and one target per request. SAP RPT weights stay fixed; only the labeled context rows change between random and balanced selection. See the [context workflow](../context_engineering/00_original_22_case_context_workflow.ipynb) for request masking and selection checks. The earlier 1,024-row SAP RPT result is historical context because its budget and request schema differ. The separate XGBoost reference uses its saved original 1,024-row training result; no context selection or retraining was applied to XGBoost for that reference."),
     code(SETUP),
     md("## Results\nRecompute SAP RPT counts from saved predictions. A missing condition stays missing until a live request succeeds."),
