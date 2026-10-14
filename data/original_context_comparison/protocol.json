@@ -1,0 +1,19 @@
+{
+  "source_sha256": "dde242d3776c1e5024fd7e3d4cc26be90f6328fbe94c5ea0125d98eeed835b92",
+  "source": "archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv",
+  "pool_rows": 1024,
+  "holdout_rows": 128,
+  "holdout_fraud_positives": 22,
+  "budget": 128,
+  "selection_seed": 11,
+  "xgboost_seed": 20261002,
+  "strategies": [
+    "random",
+    "balanced"
+  ],
+  "targets": [
+    "paid_late",
+    "is_fraud"
+  ],
+  "note": "128-row random control and balanced treatment; original saved baseline used 1024 rows"
+}

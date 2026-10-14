@@ -1,7 +1,7 @@
-# Notebook groups
+# Notebook reading order
 
-1. [Before context engineering](before_context_engineering/README.md): XGBoost and SAP RPT with random labeled examples.
-2. [Context engineering methods](context_engineering/README.md): context size, selection, quality, and semantic representation.
-3. [After context engineering](after_context_engineering/README.md): XGBoost and SAP RPT with validation-selected balanced examples.
+1. [Before context engineering](before_context_engineering/README.md): the original XGBoost and SAP RPT comparison on 128 held-out invoices with 22 fraud cases.
+2. [Context engineering](context_engineering/00_original_22_case_context_workflow.ipynb): source checks, context selection, label masking, and matched model setup on that same original data.
+3. [After context engineering](after_context_engineering/README.md): the new model comparison on the same 22-case holdout.
 
-These three groups use the **same frozen source and 128-invoice holdout**. The [older 22-case experiment](historical_22_case_experiment/README.md) is archived separately because its fraud labels differ.
+The [eight-case pilot](eight_case_pilot/README.md) used revised fraud labels. Its saved results remain available for exploratory analysis, but do not supply the after scores in this sequence.

@@ -1,4 +1,4 @@
-"""Build separate matched baseline and engineered-context benchmark notebooks."""
+"""Build the revised-label eight-case pilot benchmark notebooks."""
 
 from pathlib import Path
 
@@ -172,19 +172,19 @@ display(pd.DataFrame({'Target': list(targets.values()),
 
 
 build(
-    "before_context_engineering/01_random_context_baseline.ipynb",
+    "eight_case_pilot/01_random_context_baseline.ipynb",
     "random",
-    "Before context engineering: random-context benchmark",
-    "This is the before stage of one controlled experiment. It samples 128 labeled examples at random from the frozen source and compares XGBoost with SAP RPT on the same 128 held-out invoices used by the after stage.",
-    "Source: `data/semantic_ablation/source_snapshot.csv`. Random rows are drawn from the first 1,024 invoices; the final 128 are held out. Saved SAP runs come from `data/context_benchmark/selection_holdout_*`. The [historical 22-case run](../historical_22_case_experiment/README.md) uses different fraud labels and is not this baseline.",
-    "Random context contains few fraud positives, so both models detect few fraud cases. Read precision, recall, F1 and false positives together. The [after benchmark](../after_context_engineering/01_balanced_context_benchmark.ipynb) changes only the selected examples on this same frozen dataset.",
+    "Eight-case pilot: random-context benchmark",
+    "This exploratory pilot samples 128 labeled examples at random from the revised-label source and compares XGBoost with SAP RPT on the same 128 held-out invoices as the balanced pilot condition.",
+    "Source: `data/semantic_ablation/source_snapshot.csv`. Random rows are drawn from the first 1,024 invoices; the final 128 are held out. Saved SAP runs come from `data/context_benchmark/selection_holdout_*`. This is an eight-case exploratory pilot, separate from the [original 22-case benchmark](../before_context_engineering/README.md).",
+    "Random context contains few fraud positives, so both models detect few fraud cases. Read precision, recall, F1 and false positives together. The [balanced pilot](02_balanced_context_benchmark.ipynb) changes only the selected examples on this same frozen dataset.",
 )
 
 build(
-    "after_context_engineering/01_balanced_context_benchmark.ipynb",
+    "eight_case_pilot/02_balanced_context_benchmark.ipynb",
     "balanced",
-    "After context engineering: balanced context benchmark",
-    "Validation selected a class-balanced 128-row context for both targets. This notebook compares XGBoost and SAP RPT after that selection on the same frozen holdout and matched context IDs.",
+    "Eight-case pilot: balanced-context benchmark",
+    "Validation selected a class-balanced 128-row context for both targets. This exploratory pilot compares XGBoost and SAP RPT on the revised-label holdout and matched context IDs.",
     "Source: `data/semantic_ablation/source_snapshot.csv`. The strategy was chosen from SAP RPT mean F1 on `data/context_benchmark/selection_validation_results.csv`, using rows 897–1,024 as validation. Final context/training examples can come from rows 1–1,024; the final 128 remain untouched. The fraud context uses all 53 available positive examples and 75 negative examples. This is a selection change, not a feature-name change or SAP weight update.",
-    "The balanced strategy raises fraud recall for both models and also produces more false alarms. The small eight-fraud-case holdout makes the model ranking descriptive. Compare directly with the [before benchmark](../before_context_engineering/01_random_context_baseline.ipynb); use the [context engineering notebooks](../context_engineering/README.md) to inspect how the strategy was chosen and tested.",
+    "The balanced strategy raises fraud recall for both models and also produces more false alarms. The small eight-fraud-case holdout makes the model ranking descriptive. Compare with the [random pilot](01_random_context_baseline.ipynb); these results do not provide after scores for the original 22-case benchmark.",
 )

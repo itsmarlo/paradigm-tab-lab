@@ -1,4 +1,6 @@
-# Experiment assessment: context engineering and model comparison
+# Eight-case exploratory pilot: context engineering and model comparison
+
+This report analyzes the revised-label eight-case pilot. The main presentation sequence uses the [original 22-case benchmark](../notebooks/before_context_engineering/README.md), [original-data context walkthrough](../notebooks/context_engineering/00_original_22_case_context_workflow.ipynb), and [after benchmark](../notebooks/after_context_engineering/01_original_22_case_after_benchmark.ipynb). Pilot scores below are not after scores for that sequence.
 
 ## What context engineering means here
 

@@ -1,7 +1,5 @@
-# Before context engineering
+# Before context engineering: original benchmark
 
-The [baseline notebook](01_random_context_baseline.ipynb) benchmarks XGBoost and SAP RPT using **128 randomly selected labeled examples** from `data/semantic_ablation/source_snapshot.csv`. Both models predict the same final 128 invoices, including eight fraud cases. Five seeds vary the selected examples. SAP results are saved predictions; XGBoost is recomputed locally on the matching selected rows.
+Start with the [original XGBoost and SAP RPT notebooks](original_128/README.md). Their saved predictions use the original 1,152-row source: 1,024 labeled rows for training/context and the final 128 for testing, including **22 fraud cases**. XGBoost found 15 fraud cases with nine false alarms; SAP RPT found 10 with five false alarms. Both models predicted the same invoice IDs.
 
-The [after benchmark](../after_context_engineering/01_balanced_context_benchmark.ipynb) uses the **same source, targets, holdout, context budget, seeds, and model procedures**. It changes the selection strategy to class-balanced examples chosen on validation. The [context engineering notebooks](../context_engineering/README.md) show how that strategy was evaluated.
-
-The [older 22-case experiment](../historical_22_case_experiment/README.md) uses different fraud labels and is kept only as historical evidence.
+Next, read the [context engineering walkthrough](../context_engineering/00_original_22_case_context_workflow.ipynb) and [after benchmark](../after_context_engineering/01_original_22_case_after_benchmark.ipynb). They keep the same source and test invoices. A matched random 128-row condition accompanies the balanced 128-row condition so the effect of selection can be separated from the change in context budget.

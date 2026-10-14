@@ -1,6 +1,10 @@
-# Current context engineering notebooks
+# Context engineering notebooks
 
-Use the frozen `data/semantic_ablation/source_snapshot.csv` with these notebooks. Its final 128 invoices contain eight fraud cases. The [before](../before_context_engineering/README.md) and [after](../after_context_engineering/README.md) benchmark groups use this same source and holdout. The [older 22-case experiment](../historical_22_case_experiment/README.md) uses archived labels.
+Start with [the original 22-case walkthrough](00_original_22_case_context_workflow.ipynb). It is the main context-engineering notebook for the before/after sequence and uses the same original dataset as the presentation slides.
+
+## Eight-case exploratory pilot
+
+Use the frozen `data/semantic_ablation/source_snapshot.csv` with these notebooks. Its final 128 invoices contain eight fraud cases. The following older method notebooks use a revised eight-case label version and are retained as an exploratory pilot. Their saved scores do not measure the after stage of the original 22-case experiment.
 
 | Read order | Notebook | Question |
 | --- | --- | --- |
