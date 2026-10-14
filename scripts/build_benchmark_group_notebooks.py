@@ -93,7 +93,7 @@ display(summary.round(3))
 
 
 CHART = """fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
-colors = {'XGBoost': '#b25b22', 'SAP-RPT': '#087e8b'}
+colors = {'XGBoost': '#FFD53C', 'SAP-RPT': '#0F37FF'}
 for index, (target, label) in enumerate(targets.items()):
     for model, offset in [('XGBoost', -0.19), ('SAP-RPT', 0.19)]:
         values = results[(results.target == target) & (results.model == model)].f1

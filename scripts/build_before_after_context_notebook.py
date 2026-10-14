@@ -120,7 +120,7 @@ Each panel compares XGBoost and SAP RPT at the same 128-row budget and on the sa
 """),
     code("""fig, axes = plt.subplots(1, 2, figsize=(12, 4.6), sharey=True)
 stage_labels = ['Before: random', 'After: balanced']
-model_colors = {'XGBoost': '#b25b22', 'SAP-RPT': '#087e8b'}
+model_colors = {'XGBoost': '#FFD53C', 'SAP-RPT': '#0F37FF'}
 for ax, (target, label) in zip(axes, targets.items()):
     subset = combined[combined.target == target]
     for model, offset in [('XGBoost', -0.19), ('SAP-RPT', 0.19)]:
