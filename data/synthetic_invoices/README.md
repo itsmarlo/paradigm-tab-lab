@@ -2,7 +2,7 @@
 
 The working `payment_behavior.csv` has revised fraud labels and matches the frozen [context engineering source](../semantic_ablation/source_snapshot.csv). It has 1,152 synthetic invoices: the first 1,024 can supply training or context rows, and the final 128 form the test set. The current holdout has **8 fraud cases**. `invoice_id` is a row key, not a predictor. Both targets use `1` for yes.
 
-The saved `xgboost_results.csv`, `rpt16_results.csv`, masked request and export in this directory belong to the **historical 22-case version**, preserved as an [archived source](../../archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv). Those saved predictions do not match the working CSV's fraud labels. Use the [eight-case pilot](../../notebooks/eight_case_pilot/README.md) for the revised-label comparison. The main [before/after sequence](../../notebooks/README.md) uses the original 22-case source.
+The saved `xgboost_results.csv`, `rpt16_results.csv`, masked request and export in this directory belong to the **historical 22-case version**, preserved as an [archived source](../../archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv). Those saved predictions do not match the working CSV's fraud labels. Use the [eight-case pilot](../../reports/experiment_assessment.md) for the revised-label comparison. The main [before/after sequence](../../notebooks/README.md) uses the original 22-case source.
 
 The historical dataset used seed `20261002` and fraud intercept `-2.8`. It had 187 fraud labels in context and 22 in test. Its saved XGBoost run found **15 of 22 fraud cases** with **9 false alarms**; the saved direct RPT run found **10 of 22** with **5 false alarms**. These labels are generated from noisy formulas; they do not represent real invoices or verified fraud.
 
@@ -37,7 +37,7 @@ python3 scripts/generate_synthetic_invoices.py
 python3 scripts/run_xgboost_invoices.py
 ```
 
-The generator overwrites the working eight-case CSV with the historical 22-case labels, then creates the masked Playground CSV and RPT JSON request. Running `scripts/run_rpt16_invoices.py` sends that request to a configured SAP BTP deployment only when its source labels match the request. To review the historical saved results without a new request, open [compare_saved_results.ipynb](../../notebooks/before_context_engineering/original_128/compare_saved_results.ipynb); it uses the archived labels and checks both models' test IDs, actual labels, and saved BTP hashes.
+The generator overwrites the working eight-case CSV with the historical 22-case labels, then creates the masked Playground CSV and RPT JSON request. Running `scripts/run_rpt16_invoices.py` sends that request to a configured SAP BTP deployment only when its source labels match the request. To review the historical saved results without a new request, open [before notebook](../../notebooks/01_before_context_engineering.ipynb); it uses the archived labels and checks both models' test IDs, actual labels, and saved BTP hashes.
 
 The [other archived eight-case dataset](../../archive/synthetic_invoice_experiments/rare_fraud_baseline/README.md) is a separate experiment. Do not combine its metrics with this run or the current context engineering benchmark.
 

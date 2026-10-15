@@ -2,11 +2,11 @@
 
 ## SAP TechEd 2026 experiment sequence
 
-The [notebook index](notebooks/README.md) follows one main sequence: [original benchmark](notebooks/before_context_engineering/README.md), [context engineering walkthrough](notebooks/context_engineering/00_original_22_case_context_workflow.ipynb), and [after benchmark](notebooks/after_context_engineering/README.md). All use the same [original dataset](archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv) and final 128 test invoices with **22 fraud cases**.
+The [three-notebook sequence](notebooks/README.md) is [before](notebooks/01_before_context_engineering.ipynb), [in-context changes](notebooks/02_in_context_changes.ipynb), and [after](notebooks/03_after_context_engineering.ipynb). All use the same [original dataset](archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv) and final 128 test invoices with **22 fraud cases**.
 
 The original saved benchmark used all 1,024 eligible training/context rows. The new context experiment compares 128 randomly selected rows with 128 class-balanced rows on those same test invoices. This matched pair isolates the row-selection change; the original-to-new difference also includes a context-budget and SAP request-schema change. Reproduce the saved XGBoost results with `python scripts/run_original_context_comparison.py`. Add `--live` if SAP RPT conditions are missing from the saved outputs.
 
-The [eight-case pilot](notebooks/eight_case_pilot/README.md) and its [assessment](reports/experiment_assessment.md) used revised fraud labels. Its results are kept for exploratory reference and are not used as the after scores for this original-data sequence.
+The [eight-case pilot assessment](reports/experiment_assessment.md) used revised fraud labels. Its saved data and report remain for exploratory reference; the three notebooks use only the original 22-case dataset.
 
 The [original-data results and interpretation](reports/original_22_case_context_comparison.md) show the before benchmark and the matched random versus balanced context comparison, including fraud detections and false alarms for both models.
 
@@ -33,7 +33,7 @@ XGBoost fits a separate classifier for each target and weights the fraud class. 
 | Paid late | 32 of 51 found (62.7% recall); 65.6% accuracy | 34 of 51 found (66.7% recall); 71.1% accuracy |
 | Fraud | 15 of 22 found; 9 false alarms | 10 of 22 found; 5 false alarms |
 
-RPT scored higher on late-payment accuracy and recall in this test split. XGBoost found more fraud cases; RPT raised fewer false alarms. XGBoost ROC AUC can be calculated from its saved class-1 probabilities. RPT ROC AUC is omitted because the saved top-1 BTP response lacks a positive-class score for every row. The data and labels are synthetic, and one split does not establish production performance or a general model ranking.
+RPT scored higher on late-payment accuracy and recall in this test split. XGBoost found more fraud cases; RPT raised fewer false alarms. The [before notebook](notebooks/01_before_context_engineering.ipynb) reports XGBoost ROC AUC and average precision for both targets, with ROC and precision–recall curves. RPT ranking metrics are unavailable because the saved top-1 BTP response lacks a positive-class score for every row. The data and labels are synthetic, and one split does not establish production performance or a general model ranking.
 
 ![Saved comparison on the shared synthetic test set](notebooks/saved_results_comparison.png)
 
@@ -46,16 +46,16 @@ python3 -m pip install -r requirements-experiment.txt
 python3 scripts/validate_published_experiment.py
 ```
 
-Open [compare_saved_results.ipynb](notebooks/before_context_engineering/original_128/compare_saved_results.ipynb) to recompute the original metrics and chart. It checks the shared test IDs and true labels, as well as the saved RPT request/result checksums. No SAP request is made.
+Open the [before notebook](notebooks/01_before_context_engineering.ipynb) to recompute the original metrics and chart. It checks the shared test IDs and true labels, as well as the saved RPT request/result checksums. No SAP request is made.
 
-To regenerate the original dataset and rerun XGBoost locally, use [xgboost_run.ipynb](notebooks/before_context_engineering/original_128/xgboost_run.ipynb) for a non-overwriting notebook run, or run:
+To regenerate the original dataset and rerun XGBoost locally, run:
 
 ```sh
 python3 scripts/generate_synthetic_invoices.py
 python3 scripts/run_xgboost_invoices.py
 ```
 
-These commands overwrite the working dataset and XGBoost results with the original 22-case version; run them only when you intend to replace the current 8-case source. The generator uses a fixed seed. [rpt_btp_run.ipynb](notebooks/before_context_engineering/original_128/rpt_btp_run.ipynb) reviews the saved direct BTP result with live inference off by default (`RUN_LIVE_RPT = False`). To make a new request, copy [.env.example](.env.example) to `.env`, configure your SAP AI Core deployment, and explicitly enable live inference in the notebook. A live run can incur SAP charges. The [combined walkthrough](notebooks/before_context_engineering/original_128/payment_behavior_experiment.ipynb) is optional.
+These commands overwrite the working dataset and XGBoost results with the original 22-case version; run them only when you intend to replace the current 8-case source. The generator uses a fixed seed. To make a new SAP request, use `scripts/run_rpt16_invoices.py` with a configured deployment; a live run can incur SAP charges. The three notebooks read saved results and make no live requests.
 
 ## Data files
 
@@ -73,7 +73,7 @@ The Playground CSV is an input, **not a scored result**. A Playground summary ca
 ## Repository layout
 
 - `data/synthetic_invoices/`: working dataset and original saved model outputs; read its guide before mixing them
-- `notebooks/`: original before, context walkthrough, and after groups, plus the eight-case pilot
+- `notebooks/`: exactly three notebooks for the original before, in-context changes, and after sequence
 - `scripts/`: generation, inference, validation, and analysis helpers
 - `archive/`: separate earlier experiments
 - `api.py`: optional local HTTP interface for invoice predictions and experiment metrics

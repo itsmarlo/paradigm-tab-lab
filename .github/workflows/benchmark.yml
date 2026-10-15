@@ -24,24 +24,12 @@ jobs:
       - run: python scripts/validate_published_experiment.py
       - run: python scripts/validate_context_benchmark.py
       - run: python -m pytest -q tests/
-      - name: Execute saved comparison notebook
-        env:
-          MPLBACKEND: Agg
-        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/before_context_engineering/original_128/compare_saved_results.ipynb > /dev/null
-      - name: Execute current before and after notebook
-        env:
-          MPLBACKEND: Agg
-        run: python -m jupyter nbconvert --execute --to notebook --stdout notebooks/context_engineering/07_before_after_context_engineering.ipynb > /dev/null
-      - name: Execute original data context notebooks
+      - name: Execute the three original-data notebooks
         env:
           MPLBACKEND: Agg
         run: |
           python scripts/run_original_context_comparison.py
-          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/context_engineering/00_original_22_case_context_workflow.ipynb > /dev/null
-          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/after_context_engineering/01_original_22_case_after_benchmark.ipynb > /dev/null
-      - name: Execute eight-case pilot benchmarks
-        env:
-          MPLBACKEND: Agg
-        run: |
-          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/eight_case_pilot/01_random_context_baseline.ipynb > /dev/null
-          python -m jupyter nbconvert --execute --to notebook --stdout notebooks/eight_case_pilot/02_balanced_context_benchmark.ipynb > /dev/null
+          test "$(find notebooks -name '*.ipynb' | wc -l)" -eq 3
+          for notebook in notebooks/01_before_context_engineering.ipynb notebooks/02_in_context_changes.ipynb notebooks/03_after_context_engineering.ipynb; do
+            python -m jupyter nbconvert --execute --to notebook --stdout "$notebook" > /dev/null
+          done

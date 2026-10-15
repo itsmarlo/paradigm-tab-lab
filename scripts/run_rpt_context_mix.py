@@ -100,30 +100,24 @@ def run_plan(split, selected=None):
 
 def score_grid(predictions, split):
     rows = []
-    for (size, fraction, threshold), _ in [((size, fraction, threshold), None)
-            for size in sorted(predictions.context_rows.unique())
-            for fraction in sorted(predictions.positive_fraction.unique())
-            for threshold in THRESHOLDS]:
-        subset = predictions[(predictions.context_rows == size) &
-                             (predictions.positive_fraction == fraction)]
-        seed_rows = []
-        for seed, group in subset.groupby("seed"):
-            predicted = (group.score_positive.to_numpy() >= threshold).astype(int)
-            metrics = metric_row(group.actual.to_numpy(), predicted)
-            negatives = int((group.actual == 0).sum())
-            seed_rows.append({"seed": seed, **metrics,
-                              "false_positive_rate": metrics["false_positives"] / negatives})
-        if not seed_rows:
-            continue
-        per_seed = pd.DataFrame(seed_rows)
-        rows.append({"split": split, "context_rows": int(size),
-                     "positive_fraction": float(fraction), "threshold": threshold,
-                     "seeds": len(per_seed), "mean_f1": per_seed.f1.mean(),
-                     "mean_recall": per_seed.recall.mean(),
-                     "mean_precision": per_seed.precision.mean(),
-                     "mean_true_positives": per_seed.true_positives.mean(),
-                     "mean_false_positives": per_seed.false_positives.mean(),
-                     "mean_false_positive_rate": per_seed.false_positive_rate.mean()})
+    for (size, fraction), subset in predictions.groupby(["context_rows", "positive_fraction"]):
+        for threshold in THRESHOLDS:
+            seed_rows = []
+            for seed, group in subset.groupby("seed"):
+                predicted = (group.score_positive.to_numpy() >= threshold).astype(int)
+                metrics = metric_row(group.actual.to_numpy(), predicted)
+                negatives = int((group.actual == 0).sum())
+                seed_rows.append({"seed": seed, **metrics,
+                                  "false_positive_rate": metrics["false_positives"] / negatives})
+            per_seed = pd.DataFrame(seed_rows)
+            rows.append({"split": split, "context_rows": int(size),
+                         "positive_fraction": float(fraction), "threshold": threshold,
+                         "seeds": len(per_seed), "mean_f1": per_seed.f1.mean(),
+                         "mean_recall": per_seed.recall.mean(),
+                         "mean_precision": per_seed.precision.mean(),
+                         "mean_true_positives": per_seed.true_positives.mean(),
+                         "mean_false_positives": per_seed.false_positives.mean(),
+                         "mean_false_positive_rate": per_seed.false_positive_rate.mean()})
     return pd.DataFrame(rows)
 
 
@@ -133,7 +127,7 @@ def save_csv(frame, path):
     temp.replace(path)
 
 
-def main(live=False, split="validation"):
+def main(live=False, split="validation", max_runs=None):
     context_pool, validation, holdout = split_data()
     selected_path = OUT / "selected.json"
     if split == "holdout":
@@ -173,6 +167,8 @@ def main(live=False, split="validation"):
     complete = set(predictions.run_id.unique()) if not predictions.empty else set()
     missing = [(size, fraction, seed) for size, fraction, seed in plan
                if f"{split}|{size}|{fraction:.2f}|{seed}" not in complete]
+    if max_runs is not None:
+        missing = missing[:max_runs]
     if missing:
         connection = connection_settings()
         for size, fraction, seed in missing:
@@ -224,5 +220,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", help="Call SAP RPT for missing conditions")
     parser.add_argument("--split", choices=("validation", "holdout"), default="validation")
+    parser.add_argument("--max-runs", type=int, help="Limit new live calls; saved results are reusable")
     args = parser.parse_args()
-    main(args.live, args.split)
+    main(args.live, args.split, args.max_runs)

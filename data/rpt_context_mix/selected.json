@@ -1,0 +1,9 @@
+{
+  "context_rows": 128,
+  "positive_fraction": 0.5,
+  "threshold": 0.75,
+  "validation_mean_f1": 0.26059091349413926,
+  "validation_mean_false_positives": 8.4,
+  "validation_mean_true_positives": 6.2,
+  "rule": "Maximize mean F1 over five seeds subject to FPR <= 9/106"
+}

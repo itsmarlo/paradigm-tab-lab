@@ -1,6 +1,6 @@
 # Eight-case exploratory pilot: context engineering and model comparison
 
-This report analyzes the revised-label eight-case pilot. The main presentation sequence uses the [original 22-case benchmark](../notebooks/before_context_engineering/README.md), [original-data context walkthrough](../notebooks/context_engineering/00_original_22_case_context_workflow.ipynb), and [after benchmark](../notebooks/after_context_engineering/01_original_22_case_after_benchmark.ipynb). Pilot scores below are not after scores for that sequence.
+This report analyzes the revised-label eight-case pilot. The main presentation sequence uses the [original 22-case benchmark](../notebooks/01_before_context_engineering.ipynb), [original-data context walkthrough](../notebooks/02_in_context_changes.ipynb), and [after benchmark](../notebooks/03_after_context_engineering.ipynb). Pilot scores below are not after scores for that sequence.
 
 ## What context engineering means here
 
@@ -15,7 +15,7 @@ The first 896 rows supply strategy-selection examples, the next 128 form validat
 
 ## Current matched model comparison
 
-The [before/after notebook](../notebooks/context_engineering/07_before_after_context_engineering.ipynb) evaluates both models on the same 128 held-out invoices and the same selected example IDs for each target and seed. XGBoost's matched before/after results are reproduced locally; SAP RPT's are saved run results. Values are means over five context seeds.
+The saved pilot comparison evaluates both models on the same 128 held-out invoices and the same selected example IDs for each target and seed. XGBoost's matched before/after results are reproduced locally; SAP RPT's are saved run results. Values are means over five context seeds.
 
 | Target | Model | Random F1 | Balanced F1 | Balanced recall | Balanced false positives / 128 |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -37,6 +37,6 @@ SAP RPT has the higher mean F1 after balancing for both targets, but the late-pa
 
 The historical 22-fraud-case outputs under `data/synthetic_invoices/` use the [archived original source](../archive/synthetic_invoice_experiments/published_baseline/payment_behavior.csv). The working CSV and current frozen snapshot have eight holdout fraud cases. Their metrics must remain separate. The root README and data guide now state this, and the legacy validator checks the archived source.
 
-The notebook directory still has overlapping semantic notebooks (`04_semantic_context_engineering.ipynb` and `06_semantic_enrichment_ablation.ipynb`) and duplicate sequence numbers (`05_*` and `06_*`). Their generated content is retained for now because they may be referenced by existing notes. A later documentation pass can choose one canonical semantic notebook and renumber the series after checking links.
+The exploratory pilot's saved measurements remain under `data/context_benchmark/` and `data/semantic_ablation/`. The notebook directory now contains only the three original 22-case notebooks; this report preserves the separate eight-case analysis.
 
 Next research step: evaluate on a larger external dataset with more fraud cases and a prespecified alert-cost target. Repeat strategy selection without using final-holdout outcomes, then report uncertainty across independent datasets or folds. Class-probability outputs would allow threshold and calibration comparisons where supported.
